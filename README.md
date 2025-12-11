@@ -60,9 +60,9 @@ The project follows a **Modular Monolith** approach using **Hexagonal Architectu
 - [x] **Phase 1: Conception**
     - [x] Requirements Analysis (High Assurance / Offline)
     - [x] Technology Selection (Go/Wails/Vue)
-    - [ ] Domain Modeling (Kinetic Analysis)
+    - [x] Domain Modeling (Kinetic Analysis)
 - [x] **Phase 2: Architecture**
-    - [ ] System Context & Container Diagrams (C4 Model)
+    - [x] System Context & Container Diagrams (C4 Model)
     - [x] Architecture Decision Records (ADRs) defined
     - [x] Security Strategy (Air-Gap / Linux First)
 - [ ] **Phase 3: Implementation (Core)**
