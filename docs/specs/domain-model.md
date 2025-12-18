@@ -93,8 +93,53 @@ Ein unveränderlicher Messpunkt. Er bezieht sein Gewicht aus dem `ProjectileSnap
 classDiagram
     direction TD
 
-    %% --- AGGREGATE ROOT ---
+    %% ============================================
+    %% MASTER DATA LAYER (Inventar-Verwaltung)
+    %% ============================================
+    
+    %% --- PRIMARY AGGREGATE ROOT: Das Sportgerät ---
+    class Profile {
+        <<Entity - Primary Aggregate>>
+        +UUID ID
+        +String Name
+        +Category Category
+        +Length BarrelLength
+        +Length TwistRate
+        +Mass TriggerWeight
+        +Length SightHeight
+        +SightingSystem Optic
+        +Projectile DefaultAmmo
+        +listSessions()
+        +analyzePerformanceTrend()
+    }
+    
+    %% --- SUPPORTING ENTITIES (Zubehör & Verbrauchsmaterial) ---
+    class SightingSystem {
+        <<Entity>>
+        +UUID ID
+        +Enum Type
+        +String ModelName
+        +Mass Weight
+        +Magnification MinMag
+        +Magnification MaxMag
+    }
+    
+    class Projectile {
+        <<Entity>>
+        +UUID ID
+        +String Name
+        +String Charge
+        +Mass Weight
+        +Float BC
+    }
+
+    %% ============================================
+    %% TRANSACTION DATA LAYER (Analyse & Historie)
+    %% ============================================
+    
+    %% --- SECONDARY AGGREGATE ROOT: Die Messung ---
     class Session {
+        <<Aggregate Root - Analytics>>
         +UUID ID
         +DateTime CreatedAt
         +String Note
@@ -102,12 +147,14 @@ classDiagram
         +Pressure Pressure
         +calculateAverage()
         +calculateSD()
+        +detectPerformanceDrop()
     }
 
-    %% --- SNAPSHOTS (Deep Copies in der Session) ---
+    %% --- SNAPSHOTS (Eingefrorener Zustand zum Messzeitpunkt) ---
     class ProfileSnapshot {
-        <<Value Object>>
-        +String SnapshotName
+        <<Value Object - Frozen State>>
+        +UUID OriginalID
+        +String Name
         +Category Category
         +Length BarrelLength
         +Length TwistRate
@@ -116,14 +163,16 @@ classDiagram
     }
 
     class ProjectileSnapshot {
-        <<Value Object>>
-        +String SnapshotName
+        <<Value Object - Frozen State>>
+        +UUID OriginalID
+        +String Name
+        +String Charge
         +Mass Weight
         +Float BC
     }
 
     class SightingSystemSnapshot {
-        <<Value Object>>
+        <<Value Object - Frozen State>>
         +Enum Type
         +String ModelName
         +Mass Weight
@@ -131,41 +180,39 @@ classDiagram
         +Magnification MaxMag
     }
 
-    %% --- MEASUREMENT ---
+    %% --- RAW MEASUREMENT DATA ---
     class Shot {
+        <<Event>>
         +DateTime Timestamp
         +Velocity MeasuredValue
         +Boolean Valid
         +Energy calculateEnergy(weight)
     }
 
-    %% --- ORIGINAL MASTER DATA (Referenzen) ---
-    class ProfileMaster {
-        <<Entity>>
-        +UUID ID
-        +String CurrentName
-    }
-    class ProjectileMaster {
-        <<Entity>>
-        +UUID ID
-        +String CurrentName
-    }
+    %% ============================================
+    %% RELATIONSHIPS
+    %% ============================================
 
-    %% --- BEZIEHUNGEN ---
+    %% 1. Master Data Layer: Inventar-Beziehungen (Composition/Reference)
+    Profile "1" *-- "0..1" SightingSystem : equips (Optic)
+    Profile "1" --> "0..1" Projectile : uses (DefaultAmmo)
 
-    %% 1. Die Session besitzt die Snapshots (Composition)
+    %% 2. Profile erzeugt Sessions über Zeit (1:n Lifecycle)
+    Profile "1" --> "0..*" Session : generates over time
+
+    %% 3. Session enthält Snapshots (Composition - Unveränderlich)
     Session "1" *-- "1" ProfileSnapshot : contains frozen copy
     Session "1" *-- "1" ProjectileSnapshot : contains frozen copy
-    Session "1" *-- "n" Shot : contains
+    Session "1" *-- "n" Shot : contains measurements
 
-    %% 2. Der Profil-Snapshot enthält optional die Optik
-    ProfileSnapshot *-- "0..1" SightingSystemSnapshot : has mounted
+    %% 4. Snapshot-Struktur: Eingebettete Optik
+    ProfileSnapshot *-- "0..1" SightingSystemSnapshot : embedded copy
 
-    %% 3. Logische Referenz zum Ursprung (Dependency)
-    Session ..> ProfileMaster : was created from
-    Session ..> ProjectileMaster : was created from
+    %% 5. Audit-Trail: Snapshots verweisen auf Originale (via OriginalID)
+    ProfileSnapshot ..> Profile : references via OriginalID
+    ProjectileSnapshot ..> Projectile : references via OriginalID
 
-    %% 4. Berechnungspfad (Kommentar-Beziehung)
+    %% 6. Berechnungspfad: Shot nutzt Projektil-Snapshot
     Shot ..> ProjectileSnapshot : uses weight for energy calc
 ```
   
