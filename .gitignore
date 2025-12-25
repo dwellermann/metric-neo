@@ -38,6 +38,7 @@ pnpm-debug.log*
 *.swp
 *.swo
 *~
+metric-neo.code-workspace
 
 # OS
 .DS_Store
