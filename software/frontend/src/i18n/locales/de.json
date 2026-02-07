@@ -1,0 +1,51 @@
+{
+  "app": {
+    "title": "Metric Neo",
+    "tagline": "Ballistische Messungen & Analyse"
+  },
+  "setup": {
+    "welcome": "Willkommen bei Metric Neo",
+    "subtitle": "Deine ballistische Mess-App",
+    "firstSetup": "Erstes Setup:",
+    "selectDirectory": "Bitte wähle ein Verzeichnis, in dem Metric Neo Deine Daten speichern soll.",
+    "tipCreateFolder": "Tipp: Du kannst im Dialog einen neuen Ordner erstellen (z.B.",
+    "dataStorage": "Dort werden Profile, Projektile und Sessions gespeichert.",
+    "buttonSelectDir": "Verzeichnis wählen",
+    "buttonSelectingDir": "Wähle Verzeichnis...",
+    "selectedDirectory": "Gewähltes Verzeichnis:",
+    "foldersCreated": "Folgende Unterordner werden erstellt:",
+    "buttonChangeDir": "Anderes Verzeichnis wählen",
+    "buttonStart": "Start",
+    "buttonStarting": "Initialisiere...",
+    "configLocation": "Die Konfiguration wird gespeichert in",
+    "errorSelection": "Fehler bei Verzeichnis-Auswahl",
+    "errorSetup": "Fehler beim Setup",
+    "errorUnexpected": "Unerwarteter Fehler:"
+  },
+  "dashboard": {
+    "readyToStart": "Bereit zum Starten!",
+    "dataReady": "Deine Daten werden gespeichert und sind bereit.",
+    "laterFeatures": "Später kannst du hier Profile erstellen, Projektile verwalten und Sessions aufzeichnen.",
+    "quickActions": "Schnellzugriff"
+  },
+  "profiles": {
+    "title": "Waffen Profile",
+    "description": "Waffen & Optiken verwalten"
+  },
+  "projectiles": {
+    "title": "Projektile",
+    "description": "Munition & BC-Werte"
+  },
+  "sessions": {
+    "title": "Sessions",
+    "description": "Messungen & Statistiken"
+  },
+  "sights": {
+    "title": "Optiken",
+    "description": "Zielvorrichtungen & Optiken verwalten"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache"
+  }
+}

@@ -1,0 +1,243 @@
+package main
+
+import (
+	"fmt"
+	"metric-neo/domain/entities"
+	"metric-neo/domain/valueobjects"
+	"metric-neo/infrastructure/persistence"
+	"os"
+	"path/filepath"
+)
+
+// GO-KONZEPT: main Package und main() Funktion
+// Jedes ausführbare Go-Programm MUSS:
+// - ein "package main" haben
+// - eine "func main()" definieren (der Einstiegspunkt)
+
+func main() {
+	fmt.Println("=== Metric Neo - Complete Domain Demo ===")
+
+	// Setup: Temporäres Datenverzeichnis für Demo
+	tempDir := filepath.Join(os.TempDir(), "metric-neo-demo")
+	defer os.RemoveAll(tempDir) // Cleanup am Ende
+
+	fmt.Println("\n--- 1. Projectiles & Repository ---")
+	demoProjectiles(tempDir)
+
+	fmt.Println("\n--- 2. SightingSystem (Enums) ---")
+	demoSightingSystems()
+
+	fmt.Println("\n--- 3. Profile (Optional Fields) ---")
+	demoProfiles(tempDir)
+
+	fmt.Println("\n--- 4. Session (Snapshot Pattern) ---")
+	demoSessions(tempDir)
+
+	fmt.Println("\n✓ Alle Demos erfolgreich!")
+}
+
+func demoProjectiles(tempDir string) {
+	repo := persistence.NewProjectileRepository(tempDir)
+
+	// Erstelle 3 verschiedene Munitionstypen
+	projectiles := createSampleProjectiles()
+
+	// Speichere alle
+	fmt.Println("Speichere Projectiles...")
+	for _, p := range projectiles {
+		if err := repo.Save(p); err != nil {
+			fmt.Printf("❌ Save failed: %v\n", err)
+			return
+		}
+		fmt.Printf("  ✓ %s (BC: %.3f)\n", p.Name, p.BC)
+	}
+
+	// Liste alle auf
+	list, _ := repo.List()
+	fmt.Printf("\n✓ %d Projectiles im Repository\n", len(list))
+}
+
+func demoSightingSystems() {
+	// Zeige verschiedene SightingSystem-Typen
+
+	// 1. Zielfernrohr mit variabler Vergrößerung
+	weight1, _ := valueobjects.NewMass(450.0)
+	minMag1, _ := valueobjects.NewMagnification(4.0)
+	maxMag1, _ := valueobjects.NewMagnification(16.0)
+	scope, _ := entities.NewSightingSystem(
+		entities.SightingTypeScope,
+		"Walther FT 4-16x50",
+		weight1,
+		minMag1,
+		maxMag1,
+	)
+	fmt.Printf("Scope: %s (%s, %.1fx-%.1fx)\n",
+		scope.ModelName, scope.Type, scope.MinMagnification.Factor(), scope.MaxMagnification.Factor())
+
+	// 2. Red Dot (feste 1x Vergrößerung)
+	weight2, _ := valueobjects.NewMass(150.0)
+	mag2, _ := valueobjects.NewMagnification(1.0)
+	redDot, _ := entities.NewFixedSightingSystem(
+		entities.SightingTypeRedDot,
+		"Aimpoint Micro T-2",
+		weight2,
+		mag2,
+	)
+	fmt.Printf("Red Dot: %s (%.1fx, %dg)\n",
+		redDot.ModelName, redDot.MaxMagnification.Factor(), int(redDot.Weight.Grams()))
+
+	// 3. Diopter (KK-Schießen)
+	weight3, _ := valueobjects.NewMass(80.0)
+	diopter, _ := entities.NewIronSights("Gehmann Diopter", weight3)
+	fmt.Printf("Diopter: %s (%s)\n", diopter.ModelName, diopter.Type)
+
+	fmt.Printf("\n✓ IsVariable: Scope=%v, RedDot=%v\n", scope.IsVariable(), redDot.IsVariable())
+}
+
+func demoProfiles(tempDir string) {
+	repo := persistence.NewProfileRepository(filepath.Join(tempDir, "profiles"))
+
+	// Erstelle Wettkampf-Profile
+	barrelLength, _ := valueobjects.NewLength(420.0)
+	triggerWeight, _ := valueobjects.NewMass(500.0)
+	sightHeight, _ := valueobjects.NewLength(50.0)
+
+	profile, _ := entities.NewProfile(
+		"Walther LG400 Competition",
+		entities.CategoryAirRifle,
+		barrelLength,
+		triggerWeight,
+		sightHeight,
+	)
+
+	// Füge optionale Komponenten hinzu
+	scopeWeight, _ := valueobjects.NewMass(450.0)
+	minMag, _ := valueobjects.NewMagnification(6.0)
+	maxMag, _ := valueobjects.NewMagnification(24.0)
+	scope, _ := entities.NewSightingSystem(
+		entities.SightingTypeScope,
+		"Walther FT 6-24x50",
+		scopeWeight,
+		minMag,
+		maxMag,
+	)
+	profile.SetOptic(scope)
+
+	twistRate, _ := valueobjects.NewLengthFromInches(16.0)
+	profile.SetTwistRate(twistRate)
+
+	fmt.Printf("Profile: %s (%s)\n", profile.Name, profile.Category)
+	fmt.Printf("  Lauflänge: %s\n", profile.BarrelLength)
+	fmt.Printf("  Abzugsgewicht: %.0fg\n", profile.TriggerWeight.Grams())
+	fmt.Printf("  Optik: %s (%.1fx-%.1fx)\n",
+		profile.Optic.ModelName,
+		profile.Optic.MinMagnification.Factor(),
+		profile.Optic.MaxMagnification.Factor())
+	fmt.Printf("  Drall: %s (%.1f inch)\n", profile.TwistRate, profile.TwistRate.Inches())
+	fmt.Printf("  Gesamtgewicht: %.0fg\n", profile.TotalWeight().Grams())
+
+	// Speichere
+	repo.Save(profile)
+	fmt.Println("\n✓ Profile gespeichert")
+
+	// Lade zurück
+	loaded, _ := repo.Load(profile.ID)
+	fmt.Printf("✓ Profile geladen: %s (Optik: %s)\n", loaded.Name, loaded.Optic.ModelName)
+}
+
+func demoSessions(tempDir string) {
+	repo := persistence.NewSessionRepository(filepath.Join(tempDir, "sessions"))
+
+	// Erstelle Profile und Projectile
+	barrelLength, _ := valueobjects.NewLength(420.0)
+	triggerWeight, _ := valueobjects.NewMass(500.0)
+	sightHeight, _ := valueobjects.NewLength(50.0)
+	profile, _ := entities.NewProfile(
+		"Walther LG400",
+		entities.CategoryAirRifle,
+		barrelLength,
+		triggerWeight,
+		sightHeight,
+	)
+
+	pelletWeight, _ := valueobjects.NewMass(0.547)
+	projectile, _ := entities.NewProjectile("JSB Exact 4.52mm", pelletWeight, 0.022)
+	projectile.UpdateBC(0.024)
+
+	// Erstelle Session (mit Snapshot Pattern!)
+	session := entities.NewSession(profile, projectile)
+
+	// Setze Umgebungsdaten
+	temp, _ := valueobjects.NewTemperature(21.5)
+	session.SetTemperature(temp)
+	session.SetNote("Training - Auflage 10m")
+
+	// Füge Schüsse hinzu
+	velocities := []float64{175.2, 176.1, 174.8, 175.5, 176.3, 175.1, 174.9, 175.8}
+	fmt.Println("Füge Schüsse hinzu:")
+	for i, v := range velocities {
+		vel, _ := valueobjects.NewVelocity(v)
+		shot := session.RecordShot(vel)
+		fmt.Printf("  Schuss %d: %s (%.2f J)\n", i+1, shot.Velocity,
+			shot.CalculateEnergy(pelletWeight).Joules())
+	}
+
+	// Berechne Statistiken
+	fmt.Println("\nStatistiken:")
+	avg, _ := session.CalculateAverageVelocity()
+	sd, _ := session.CalculateStandardDeviation()
+	min, _ := session.MinVelocity()
+	max, _ := session.MaxVelocity()
+	es, _ := session.ExtremeSpread()
+	avgEnergy, _ := session.CalculateAverageEnergy()
+
+	fmt.Printf("  Ø Geschwindigkeit: %s\n", avg)
+	fmt.Printf("  SD: %.2f m/s\n", sd)
+	fmt.Printf("  Min: %s\n", min)
+	fmt.Printf("  Max: %s\n", max)
+	fmt.Printf("  ES: %.2f m/s\n", es)
+	fmt.Printf("  Ø Energie: %s\n", avgEnergy)
+
+	// Speichere Session
+	repo.Save(session)
+	fmt.Println("\n✓ Session gespeichert")
+
+	// KRITISCH: Ändere Originals NACH Session-Erstellung
+	fmt.Println("\n--- Snapshot Isolation Test ---")
+	originalProfileName := session.ProfileSnapshot.Name
+	profile.Name = "GEÄNDERTER NAME"
+	projectile.UpdateBC(0.999)
+
+	// Lade Session zurück
+	loaded, _ := repo.Load(session.ID)
+
+	if loaded.ProfileSnapshot.Name == originalProfileName {
+		fmt.Println("✓ Snapshot Isolation funktioniert!")
+		fmt.Printf("  Original wurde geändert auf: '%s'\n", profile.Name)
+		fmt.Printf("  Session-Snapshot behält: '%s'\n", loaded.ProfileSnapshot.Name)
+	} else {
+		fmt.Println("❌ Snapshot Isolation FEHLER!")
+	}
+}
+
+// Helper: Erstelle Sample-Daten
+func createSampleProjectiles() []*entities.Projectile {
+	projectiles := []*entities.Projectile{}
+
+	// JSB Exact
+	weight1, _ := valueobjects.MassFromGrain(8.44)
+	p1, _ := entities.NewProjectile("JSB Exact 4.52mm", weight1, 0.022)
+	projectiles = append(projectiles, p1)
+
+	// H&N Baracuda
+	weight2, _ := valueobjects.MassFromGrain(10.65)
+	p2, _ := entities.NewProjectile("H&N Baracuda Match", weight2, 0.029)
+	projectiles = append(projectiles, p2)
+
+	// RWS Meisterkugeln
+	weight3, _ := valueobjects.MassFromGrain(7.0)
+	p3, _ := entities.NewProjectile("RWS Meisterkugeln", weight3, 0.018)
+	projectiles = append(projectiles, p3)
+
+	return projectiles
+}

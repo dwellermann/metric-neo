@@ -1,0 +1,51 @@
+{
+  "app": {
+    "title": "Metric Neo",
+    "tagline": "Ballistic Measurements & Analysis"
+  },
+  "setup": {
+    "welcome": "Welcome to Metric Neo",
+    "subtitle": "Your Ballistic Measurement App",
+    "firstSetup": "Initial Setup:",
+    "selectDirectory": "Please select a directory where Metric Neo will store your data.",
+    "tipCreateFolder": "Tip: You can create a new folder in the dialog (e.g.",
+    "dataStorage": "Profiles, projectiles and sessions will be stored there.",
+    "buttonSelectDir": "Select Directory",
+    "buttonSelectingDir": "Selecting Directory...",
+    "selectedDirectory": "Selected Directory:",
+    "foldersCreated": "The following subfolders will be created:",
+    "buttonChangeDir": "Choose Different Directory",
+    "buttonStart": "Start",
+    "buttonStarting": "Initializing...",
+    "configLocation": "Configuration will be saved in",
+    "errorSelection": "Error selecting directory",
+    "errorSetup": "Error during setup",
+    "errorUnexpected": "Unexpected error:"
+  },
+  "dashboard": {
+    "readyToStart": "Ready to Start!",
+    "dataReady": "Your data is stored and ready.",
+    "laterFeatures": "Later you can create profiles, manage projectiles and record sessions here.",
+    "quickActions": "Quick Access"
+  },
+  "profiles": {
+    "title": "Profiles",
+    "description": "Manage Weapons & Optics"
+  },
+  "projectiles": {
+    "title": "Projectiles",
+    "description": "Ammunition & BC Values"
+  },
+  "sessions": {
+    "title": "Sessions",
+    "description": "Measurements & Statistics"
+  },
+  "sights": {
+    "title": "Sights",
+    "description": "Manage Sighting Devices & Optics"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language"
+  }
+}

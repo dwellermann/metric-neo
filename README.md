@@ -1,10 +1,10 @@
-    
+
 <div align="center">
   <!-- Logo (Stelle sicher, dass die Datei unter assets/logos/logo.svg liegt) -->
   <img src="assets/logos/logo.svg" width="160" height="160" alt="Metric Neo Logo">
 
   <h1>Metric Neo</h1>
-  
+
   <p>
     <strong>Modular Measurement and Maintenance Platform for Shooting Sports.</strong>
   </p>
@@ -15,7 +15,7 @@
   </p>
 
   <!-- Badges Row 1: Tech Stack & Platform -->
-    
+
 <p>
   <img src="https://img.shields.io/badge/Backend-Go-blue?style=flat&logo=go&logoColor=white" alt="Backend Go">
   <img src="https://img.shields.io/badge/Framework-Wails-CF2F36?style=flat&logo=wails&logoColor=white" alt="Framework Wails">
@@ -73,11 +73,11 @@ The project follows a **Modular Monolith** approach using **Hexagonal Architectu
     - [x] Persistence Layer
         - [x] JSON Repository Implementation
         - [x] Snapshot Pattern (Deep Copy for Audit Trail)
-    - [ ] Framework Integration
-        - [ ] Initialize Wails Project Structure
-        - [ ] Application Service Layer (Domain ↔ UI Bridge)
-- [ ] **Phase 4: UI & Hardware Integration**
-    - [ ] Frontend Foundation (Vue.js + Element Plus)
+    - [x] Framework Integration
+        - [x] Initialize Wails Project Structure
+        - [x] Application Service Layer (Domain ↔ UI Bridge)
+- [-] **Phase 4: UI & Hardware Integration**
+    - [-] Frontend Foundation (Vue.js + Naive-UI)
         - [ ] Session Management UI
         - [ ] Shot Data Visualization
     - [ ] Hardware Integration
@@ -91,13 +91,13 @@ The project follows a **Modular Monolith** approach using **Hexagonal Architectu
 - [ ] **Phase 6: Web Presence & Ecosystem**
     - [ ] Setup VitePress for Documentation & Landing Page
     - [ ] Configure GitHub Actions for Automatic SFTP Deployment
-    - [ ] Implement Automated Download Page 
+    - [ ] Implement Automated Download Page
 
 > **Note on Implementation Strategy:** The backend is developed in a layered approach (Domain → Persistence → Framework) to ensure maximum testability, portability, and adherence to hexagonal architecture principles. This allows the core logic to remain framework-agnostic and simplifies future platform extensions.
 ## 🚀 Getting Started
 
 ### comming soon...
-  
+
 
 ## 🛡️ Security & Privacy
 
