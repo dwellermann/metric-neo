@@ -10,7 +10,7 @@
   </p>
   <!-- Status & Language -->
   <p>
-    <img src="https://img.shields.io/badge/Status-Architecture%20%26%20Design-blue?style=flat&logo=gitbook&logoColor=white" alt="Status">
+    <img src="https://img.shields.io/badge/Status-Development-blue?style=flat&logo=gitbook&logoColor=white" alt="Status">
     <img src="https://img.shields.io/badge/ADRs-German_🇩🇪-purple?style=flat" alt="Docs Language">
   </p>
 
@@ -28,9 +28,8 @@
 
 ---
 
-> 🚧 **Project Status: Architecture Phase**
-> This repository currently serves as the **architectural blueprint and specification** for Metric Neo.
-> The implementation phase (coding) has not yet started.
+> 🚧 **Project Status: Development Phase**
+> The implementation phase (coding) has started, and the first Alpha release is in testing. Next steps is CI/CD pipeline setup and web presence (documentation & landing page). The major problem is WebKit in Fedora and Ubuntu and the different versions of WebKitGTK. The CI/CD pipeline is currently focused on Linux, but Windows CI/CD is planned.
 >
 > 🇩🇪 **Note:** While the source code and UI are in English to adhere to international standards, the architectural decision records (ADRs) and domain specifications in the `/docs` folder are currently maintained in **German**. This reflects the primary requirements of the initial stakeholder group (DACH region).
 
@@ -50,7 +49,7 @@ It solves the scalability issue faced by ambitious sport shooters and equipment 
 The project follows a **Modular Monolith** approach using **Hexagonal Architecture** principles to separate the domain logic (kinetic analysis & statistics) from the infrastructure (serial ports, file storage).
 
 *   **Backend:** Go (Wails) for type-safe, high-performance serial communication.
-*   **Frontend:** Vue.js + Element Plus for a modern, dark-mode compatible UI.
+*   **Frontend:** Vue.js + Naive-Ui for a modern, dark-mode compatible UI.
 *   **Data Storage:** Local JSON files (human-readable) with an abstraction layer for future encryption.
 
 **[Explore the Architecture Documentation (German) →](./docs/adr)**
@@ -76,15 +75,15 @@ The project follows a **Modular Monolith** approach using **Hexagonal Architectu
     - [x] Framework Integration
         - [x] Initialize Wails Project Structure
         - [x] Application Service Layer (Domain ↔ UI Bridge)
-- [-] **Phase 4: UI & Hardware Integration**
-    - [-] Frontend Foundation (Vue.js + Naive-UI)
-        - [ ] Session Management UI
-        - [ ] Shot Data Visualization
-    - [ ] Hardware Integration
-        - [ ] RS232 Serial Driver (LMBR Protocol)
-        - [ ] Auto-Discovery & Error Handling
-    - [ ] First Alpha Release
-- [ ] **Phase 5: CI/CD & Automation**
+- [x] **Phase 4: UI & Hardware Integration**
+    - [x] Frontend Foundation (Vue.js + Naive-UI)
+        - [x] Session Management UI
+        - [x] Shot Data Visualization
+    - [x] Hardware Integration
+        - [x] RS232 Serial Driver (LMBR Protocol)
+        - [x] Auto-Discovery & Error Handling
+    - [x] First Alpha Release
+- [-] **Phase 5: CI/CD & Automation**
     - [ ] Configure GitHub Actions (Cross-Compile Wails for Win/Linux)
     - [ ] Setup Quality Gates (Go Vet?, biome.js ? Testing?)
     - [ ] Automate Release Pipelines (Draft Releases & Artifact Upload)

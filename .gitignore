@@ -56,6 +56,9 @@ Thumbs.db
 go.sum
 go.work
 
+# --- Private Dirs ---
+pNotes/
+
 # --- Private Keys / Secrets (Safety First!) ---
 *.key
 *.pem

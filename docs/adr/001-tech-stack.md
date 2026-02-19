@@ -33,13 +33,13 @@ Da das Projekt als Referenz dient und später potenziell erweitert wird, muss di
 
 Wir entscheiden uns für folgende Kern-Komponenten:
 1.  **Framework:** Wails (Go Backend + Web Frontend).
-2.  **UI Library:** Vue.js mit Element Plus.
+2.  **UI Library:** Vue.js mit Naive-Ui.
 3.  **Datenhaltung:** JSON-Dateien (File System Storage).
 4.  **Lizenz-Management:** Pragmatischer "Permissive First" Ansatz.
 
 ### Begründung
 *   **Wails (Go):** Go bietet als kompilierte Sprache eine hohe Ausführungssicherheit (Typensicherheit) und exzellente Performance für die serielle Kommunikation (RS232). Im Gegensatz zu Electron erzeugt Wails deutlich schlankere Binaries und verbraucht weniger RAM, was auf älteren Laptops am Schießstand wichtig ist.
-*   **Vue.js & Element Plus:** Element Plus bietet einen sehr umfangreichen Satz an getesteten UI-Komponenten (Data Grids, Inputs). Da diese unter der MIT-Lizenz stehen, sind sie unproblematisch. Dies beschleunigt die UI-Entwicklung massiv im Vergleich zu nativem C++/GTK Code.
+*   **Vue.js & Naive-Ui:** Naive-Ui bietet einen sehr umfangreichen Satz an getesteten UI-Komponenten (Data Grids, Inputs). Da diese unter der MIT-Lizenz stehen, sind sie unproblematisch. Dies beschleunigt die UI-Entwicklung massiv im Vergleich zu nativem C++/GTK Code.
 *   **JSON-Storage:** In der Startphase ist eine SQL-Datenbank (auch SQLite) oft "Over-Engineering". JSON ist menschenlesbar. Wenn ein User meldet "Meine Waffe wird falsch geladen", kann er uns einfach die JSON-Datei schicken. Das erleichtert Support und Debugging drastisch.
 *   **Plattform-Strategie:** Wir schließen Windows nicht aus, da dort 90% der Zielgruppe (Schützenvereine) unterwegs sind. Linux wird als First-Class-Citizen unterstützt, um technisch versierten Nutzern eine auditierbare Plattform zu bieten.
 
