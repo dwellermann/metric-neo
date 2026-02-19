@@ -13,6 +13,7 @@ type ProfileDTO struct {
 	TriggerWeightG float64   `json:"triggerWeightG"`
 	SightHeightMM  float64   `json:"sightHeightMM"`
 	Optic          *OpticDTO `json:"optic,omitempty"`
+	OpticID        *string   `json:"opticID,omitempty"`
 	TwistRateMM    *float64  `json:"twistRateMM,omitempty"`
 	DefaultAmmoID  *string   `json:"defaultAmmoID,omitempty"`
 	TotalWeightG   float64   `json:"totalWeightG"` // Calculated
@@ -46,6 +47,10 @@ func ProfileToDTO(p *entities.Profile) ProfileDTO {
 			MinMagnification: p.Optic.MinMagnification.Factor(),
 			MaxMagnification: p.Optic.MaxMagnification.Factor(),
 		}
+	}
+
+	if p.OpticID != nil {
+		dto.OpticID = p.OpticID
 	}
 
 	if p.TwistRate != nil {
@@ -107,6 +112,10 @@ func DTOToProfile(dto ProfileDTO) (*entities.Profile, error) {
 
 	if dto.DefaultAmmoID != nil {
 		profile.SetDefaultAmmo(*dto.DefaultAmmoID)
+	}
+
+	if dto.OpticID != nil {
+		profile.OpticID = dto.OpticID
 	}
 
 	// Setze ID (für Updates)

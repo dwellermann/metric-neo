@@ -18,13 +18,15 @@ import (
 // Wails Binding -> ProfileService -> Domain (Entities/ValueObjects) -> Repository -> JSON
 type ProfileService struct {
 	repo *persistence.ProfileRepository
+	sightRepo *persistence.SightRepository
 }
 
 // NewProfileService erstellt einen neuen ProfileService.
 // dataDir ist das Root-Verzeichnis, Repository nutzt inventory/profiles/
 func NewProfileService(dataDir string) *ProfileService {
 	return &ProfileService{
-		repo: persistence.NewProfileRepository(filepath.Join(dataDir, "inventory", "profiles")),
+		repo:      persistence.NewProfileRepository(filepath.Join(dataDir, "inventory", "profiles")),
+		sightRepo: persistence.NewSightRepository(filepath.Join(dataDir, "inventory", "sights")),
 	}
 }
 
@@ -95,6 +97,12 @@ func (s *ProfileService) LoadProfile(id string) Result[ProfileDTO] {
 		return FailWithMessage[ProfileDTO](fmt.Sprintf("Profile nicht gefunden: %s", id))
 	}
 
+	if profile.Optic == nil && profile.OpticID != nil {
+		if sight, err := s.sightRepo.Load(*profile.OpticID); err == nil {
+			profile.Optic = sight
+		}
+	}
+
 	return OK(ProfileToDTO(profile))
 }
 
@@ -114,6 +122,11 @@ func (s *ProfileService) ListProfiles() Result[[]ProfileDTO] {
 			// Skip fehlerhafte Profile (nicht crashen!)
 			continue
 		}
+		if profile.Optic == nil && profile.OpticID != nil {
+			if sight, err := s.sightRepo.Load(*profile.OpticID); err == nil {
+				profile.Optic = sight
+			}
+		}
 		dtos = append(dtos, ProfileToDTO(profile))
 	}
 
@@ -131,6 +144,61 @@ func (s *ProfileService) DeleteProfile(id string) Result[bool] {
 	}
 
 	return OK(true)
+}
+
+// UpdateProfile aktualisiert die Basisdaten eines Profiles.
+func (s *ProfileService) UpdateProfile(
+	profileID string,
+	name string,
+	category string,
+	barrelLengthMM float64,
+	triggerWeightG float64,
+	sightHeightMM float64,
+) Result[ProfileDTO] {
+	if profileID == "" {
+		return FailWithMessage[ProfileDTO]("ID darf nicht leer sein")
+	}
+
+	if name == "" {
+		return FailWithMessage[ProfileDTO]("Name darf nicht leer sein")
+	}
+
+	cat := entities.ProfileCategory(category)
+	if !cat.IsValid() {
+		return FailWithMessage[ProfileDTO]("Ungültige Kategorie")
+	}
+
+	barrelLength, err := valueobjects.NewLength(barrelLengthMM)
+	if err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
+	triggerWeight, err := valueobjects.NewMass(triggerWeightG)
+	if err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
+	sightHeight, err := valueobjects.NewLength(sightHeightMM)
+	if err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
+	profile, err := s.repo.Load(profileID)
+	if err != nil {
+		return FailWithMessage[ProfileDTO]("Profile nicht gefunden")
+	}
+
+	profile.Name = name
+	profile.Category = cat
+	profile.BarrelLength = barrelLength
+	profile.TriggerWeight = triggerWeight
+	profile.SightHeight = sightHeight
+
+	if err := s.repo.Save(profile); err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
+	return OK(ProfileToDTO(profile))
 }
 
 // SetOptic fügt einem Profile eine Optik hinzu.
@@ -181,6 +249,10 @@ func (s *ProfileService) SetOptic(
 		return Fail[ProfileDTO](err)
 	}
 
+	if err := s.sightRepo.Save(optic); err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
 	// Setze Optik
 	profile.SetOptic(optic)
 
@@ -208,6 +280,27 @@ func (s *ProfileService) RemoveOptic(profileID string) Result[ProfileDTO] {
 	return OK(ProfileToDTO(profile))
 }
 
+// LinkOpticByID verknüpft ein Profile mit einer bestehenden Optik.
+func (s *ProfileService) LinkOpticByID(profileID string, sightID string) Result[ProfileDTO] {
+	profile, err := s.repo.Load(profileID)
+	if err != nil {
+		return FailWithMessage[ProfileDTO]("Profile nicht gefunden")
+	}
+
+	sight, err := s.sightRepo.Load(sightID)
+	if err != nil {
+		return FailWithMessage[ProfileDTO]("Optik nicht gefunden")
+	}
+
+	profile.SetOptic(sight)
+
+	if err := s.repo.Save(profile); err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
+	return OK(ProfileToDTO(profile))
+}
+
 // SetTwistRate setzt den Drall (Twist Rate) für ein Profile.
 func (s *ProfileService) SetTwistRate(profileID string, twistRateMM float64) Result[ProfileDTO] {
 	profile, err := s.repo.Load(profileID)
@@ -221,6 +314,22 @@ func (s *ProfileService) SetTwistRate(profileID string, twistRateMM float64) Res
 	}
 
 	profile.SetTwistRate(twistRate)
+
+	if err := s.repo.Save(profile); err != nil {
+		return Fail[ProfileDTO](err)
+	}
+
+	return OK(ProfileToDTO(profile))
+}
+
+// RemoveTwistRate entfernt den Drall (Twist Rate) von einem Profile.
+func (s *ProfileService) RemoveTwistRate(profileID string) Result[ProfileDTO] {
+	profile, err := s.repo.Load(profileID)
+	if err != nil {
+		return FailWithMessage[ProfileDTO]("Profile nicht gefunden")
+	}
+
+	profile.TwistRate = nil
 
 	if err := s.repo.Save(profile); err != nil {
 		return Fail[ProfileDTO](err)

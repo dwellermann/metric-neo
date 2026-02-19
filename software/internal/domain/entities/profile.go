@@ -40,6 +40,12 @@ func (c ProfileCategory) String() string {
 	return string(c)
 }
 
+// Profile repräsentiert ein Sportgeräte-Profil (Hardware-Konfiguration).
+//
+// GO-KONZEPT: Optional Fields (Pointer vs. Value)
+// In Go gibt es KEINE "Optional<T>" wie in TypeScript!
+// Stattdessen: Pointer = kann nil sein = optional
+//
 // DOMAIN MODEL: Siehe docs/specs/domain-model.md Abschnitt 3.2
 type Profile struct {
 	ID       string          `json:"id"`
@@ -66,6 +72,9 @@ type Profile struct {
 	// WICHTIG: Das "omitempty" JSON-Tag bedeutet:
 	// "Wenn nil, dann nicht im JSON ausgeben"
 	Optic *SightingSystem `json:"optic,omitempty"`
+
+	// OpticID referenziert eine Optik aus dem Sights-Inventar (optional)
+	OpticID *string `json:"optic_id,omitempty"`
 
 	// GO-KONZEPT: Pointer zu anderem Entity
 	// DefaultAmmo ist eine REFERENZ zu einem Projectile
@@ -116,11 +125,18 @@ func NewProfile(
 // um Validierung zu ermöglichen.
 func (p *Profile) SetOptic(optic *SightingSystem) {
 	p.Optic = optic
+	if optic != nil {
+		p.OpticID = &optic.ID
+	} else {
+		// Wichtig: Auch OpticID auf nil setzen wenn optic nil ist!
+		p.OpticID = nil
+	}
 }
 
 // RemoveOptic entfernt die Optik.
 func (p *Profile) RemoveOptic() {
 	p.Optic = nil
+	p.OpticID = nil
 }
 
 // HasOptic prüft, ob eine Optik montiert ist.

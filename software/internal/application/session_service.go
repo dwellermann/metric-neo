@@ -105,9 +105,7 @@ func (s *SessionService) RecordShot(
 		return FailWithMessage[SessionDTO]("Session-ID darf nicht leer sein")
 	}
 
-	// KEINE Validierung von velocityMPS hier!
-	// Wir erlauben auch 0.0 für Fehlmessungen, die später als invalid markiert werden.
-	// Die Domain-Validierung in NewVelocity() prüft nur auf < 0.
+	// Validierung erfolgt in NewVelocity() (inkl. Bounds-Check).
 
 	// Lade Session
 	session, err := s.sessionRepo.Load(sessionID)

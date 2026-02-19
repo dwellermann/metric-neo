@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { darkTheme, NConfigProvider } from 'naive-ui';
+import { darkTheme, NConfigProvider, NMessageProvider, NDialogProvider } from 'naive-ui';
 import { NeedsSetup, GetSystemTheme } from '../wailsjs/go/main/App';
 import SetupDialog from './components/SetupDialog.vue';
 import MainApp from './components/MainApp.vue';
@@ -47,20 +47,24 @@ function onSetupComplete(dataDir) {
 
 <template>
   <n-config-provider :theme="naiveTheme">
-  <!-- Ladebildschirm -->
-  <div v-if="isLoading" class="loading-screen">
-    <div class="spinner"></div>
-    <p>Metric Neo wird geladen...</p>
-  </div>
+    <n-message-provider>
+      <n-dialog-provider>
+        <!-- Ladebildschirm -->
+        <div v-if="isLoading" class="loading-screen">
+          <div class="spinner"></div>
+          <p>Metric Neo wird geladen...</p>
+        </div>
 
-  <!-- Setup-Dialog beim ersten Start -->
-  <SetupDialog
-    v-else-if="needsSetup"
-    @setupComplete="onSetupComplete"
-  />
+        <!-- Setup-Dialog beim ersten Start -->
+        <SetupDialog
+          v-else-if="needsSetup"
+          @setupComplete="onSetupComplete"
+        />
 
-  <!-- Haupt-Anwendung -->
-  <MainApp v-else />
+        <!-- Haupt-Anwendung -->
+        <MainApp v-else />
+      </n-dialog-provider>
+    </n-message-provider>
   </n-config-provider>
 </template>
 

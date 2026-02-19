@@ -1,3 +1,9 @@
+<script setup>
+import { NCard, NGrid, NGi } from 'naive-ui';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+</script>
 <template>
   <div class="dashboard">
     <n-card>
@@ -43,14 +49,6 @@
     </n-grid>
   </div>
 </template>
-
-<script setup>
-import { NCard, NGrid, NGi } from 'naive-ui';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
-</script>
-
 <style scoped>
 .dashboard {
   display: flex;

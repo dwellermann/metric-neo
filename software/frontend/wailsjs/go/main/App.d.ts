@@ -6,6 +6,8 @@ export function ChangeDataDirectory():Promise<application.Result_string_>;
 
 export function CompleteSetup(arg1:string):Promise<application.Result_bool_>;
 
+export function GetChronoConfig():Promise<application.Result_metric_neo_internal_application_ChronoConfigDTO_>;
+
 export function GetCurrentDataDir():Promise<string>;
 
 export function GetSuggestedDataDir():Promise<string>;
@@ -16,4 +18,66 @@ export function Greet(arg1:string):Promise<string>;
 
 export function NeedsSetup():Promise<boolean>;
 
+export function ProfileCreateProfile(arg1:string,arg2:string,arg3:number,arg4:number,arg5:number):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileDeleteProfile(arg1:string):Promise<application.Result_bool_>;
+
+export function ProfileLinkOpticByID(arg1:string,arg2:string):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileListProfiles():Promise<application.Result___metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileLoadProfile(arg1:string):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileRemoveOptic(arg1:string):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileRemoveTwistRate(arg1:string):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileSetOptic(arg1:string,arg2:string,arg3:string,arg4:number,arg5:number,arg6:number):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileSetTwistRate(arg1:string,arg2:number):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProfileUpdateProfile(arg1:string,arg2:string,arg3:string,arg4:number,arg5:number,arg6:number):Promise<application.Result_metric_neo_internal_application_ProfileDTO_>;
+
+export function ProjectileCreateProjectile(arg1:string,arg2:number,arg3:number):Promise<application.Result_metric_neo_internal_application_ProjectileDTO_>;
+
+export function ProjectileDeleteProjectile(arg1:string):Promise<application.Result_bool_>;
+
+export function ProjectileListProjectiles():Promise<application.Result___metric_neo_internal_application_ProjectileDTO_>;
+
+export function ProjectileLoadProjectile(arg1:string):Promise<application.Result_metric_neo_internal_application_ProjectileDTO_>;
+
+export function ProjectileUpdateBC(arg1:string,arg2:number):Promise<application.Result_metric_neo_internal_application_ProjectileDTO_>;
+
+export function ProjectileUpdateProjectile(arg1:string,arg2:string,arg3:number,arg4:number):Promise<application.Result_metric_neo_internal_application_ProjectileDTO_>;
+
 export function SelectDataDirectory():Promise<application.Result_string_>;
+
+export function SessionCreateSession(arg1:string,arg2:string,arg3:any,arg4:string):Promise<application.Result_metric_neo_internal_application_SessionDTO_>;
+
+export function SessionDeleteSession(arg1:string):Promise<application.Result_bool_>;
+
+export function SessionGetStatistics(arg1:string):Promise<application.Result_metric_neo_internal_application_StatisticsDTO_>;
+
+export function SessionListSessions():Promise<application.Result___metric_neo_internal_application_SessionMetaDTO_>;
+
+export function SessionLoadSession(arg1:string):Promise<application.Result_metric_neo_internal_application_SessionDTO_>;
+
+export function SessionMarkShotInvalid(arg1:string,arg2:number):Promise<application.Result_metric_neo_internal_application_SessionDTO_>;
+
+export function SessionPollChrono(arg1:string):Promise<application.Result_metric_neo_internal_application_ChronoPollResultDTO_>;
+
+export function SessionRecordShot(arg1:string,arg2:number):Promise<application.Result_metric_neo_internal_application_SessionDTO_>;
+
+export function SessionUpdateNote(arg1:string,arg2:string):Promise<application.Result_metric_neo_internal_application_SessionDTO_>;
+
+export function SightCreateSight(arg1:string,arg2:string,arg3:number,arg4:number,arg5:number):Promise<application.Result_metric_neo_internal_application_SightDTO_>;
+
+export function SightDeleteSight(arg1:string):Promise<application.Result_bool_>;
+
+export function SightListSights():Promise<application.Result___metric_neo_internal_application_SightDTO_>;
+
+export function SightLoadSight(arg1:string):Promise<application.Result_metric_neo_internal_application_SightDTO_>;
+
+export function SightUpdateSight(arg1:string,arg2:string,arg3:string,arg4:number,arg5:number,arg6:number):Promise<application.Result_metric_neo_internal_application_SightDTO_>;
+
+export function UpdateChronoConfig(arg1:boolean,arg2:string,arg3:number,arg4:boolean):Promise<application.Result_metric_neo_internal_application_ChronoConfigDTO_>;

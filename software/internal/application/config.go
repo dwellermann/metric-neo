@@ -10,6 +10,12 @@ import (
 // Config enthält die App-Konfiguration
 type Config struct {
 	DataDir string `json:"dataDir"` // Verzeichnis für Daten-Persistierung
+
+	// Chrono (RS232) Konfiguration
+	ChronoEnabled    bool   `json:"chronoEnabled,omitempty"`
+	ChronoPort       string `json:"chronoPort,omitempty"`
+	ChronoBaudRate   int    `json:"chronoBaudRate,omitempty"`
+	ChronoAutoRecord bool   `json:"chronoAutoRecord,omitempty"`
 }
 
 // GetConfigPath gibt den Pfad zur config.json zurück
@@ -133,9 +139,11 @@ func SaveConfig(cfg *Config) error {
 //
 // Go-Pattern: Constructor-Funktion
 // Wird vom Setup-Flow aufgerufen nachdem User Verzeichnis gewählt hat
+// Default Chrono BaudRate: 19200
 func CreateConfig(dataDir string) (*Config, error) {
 	cfg := &Config{
-		DataDir: dataDir,
+		DataDir:        dataDir,
+		ChronoBaudRate: 19200, // Standard BaudRate für Chronographen
 	}
 
 	if err := SaveConfig(cfg); err != nil {

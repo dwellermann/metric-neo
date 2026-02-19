@@ -10,6 +10,10 @@ export function CompleteSetup(arg1) {
   return window['go']['main']['App']['CompleteSetup'](arg1);
 }
 
+export function GetChronoConfig() {
+  return window['go']['main']['App']['GetChronoConfig']();
+}
+
 export function GetCurrentDataDir() {
   return window['go']['main']['App']['GetCurrentDataDir']();
 }
@@ -30,6 +34,130 @@ export function NeedsSetup() {
   return window['go']['main']['App']['NeedsSetup']();
 }
 
+export function ProfileCreateProfile(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['main']['App']['ProfileCreateProfile'](arg1, arg2, arg3, arg4, arg5);
+}
+
+export function ProfileDeleteProfile(arg1) {
+  return window['go']['main']['App']['ProfileDeleteProfile'](arg1);
+}
+
+export function ProfileLinkOpticByID(arg1, arg2) {
+  return window['go']['main']['App']['ProfileLinkOpticByID'](arg1, arg2);
+}
+
+export function ProfileListProfiles() {
+  return window['go']['main']['App']['ProfileListProfiles']();
+}
+
+export function ProfileLoadProfile(arg1) {
+  return window['go']['main']['App']['ProfileLoadProfile'](arg1);
+}
+
+export function ProfileRemoveOptic(arg1) {
+  return window['go']['main']['App']['ProfileRemoveOptic'](arg1);
+}
+
+export function ProfileRemoveTwistRate(arg1) {
+  return window['go']['main']['App']['ProfileRemoveTwistRate'](arg1);
+}
+
+export function ProfileSetOptic(arg1, arg2, arg3, arg4, arg5, arg6) {
+  return window['go']['main']['App']['ProfileSetOptic'](arg1, arg2, arg3, arg4, arg5, arg6);
+}
+
+export function ProfileSetTwistRate(arg1, arg2) {
+  return window['go']['main']['App']['ProfileSetTwistRate'](arg1, arg2);
+}
+
+export function ProfileUpdateProfile(arg1, arg2, arg3, arg4, arg5, arg6) {
+  return window['go']['main']['App']['ProfileUpdateProfile'](arg1, arg2, arg3, arg4, arg5, arg6);
+}
+
+export function ProjectileCreateProjectile(arg1, arg2, arg3) {
+  return window['go']['main']['App']['ProjectileCreateProjectile'](arg1, arg2, arg3);
+}
+
+export function ProjectileDeleteProjectile(arg1) {
+  return window['go']['main']['App']['ProjectileDeleteProjectile'](arg1);
+}
+
+export function ProjectileListProjectiles() {
+  return window['go']['main']['App']['ProjectileListProjectiles']();
+}
+
+export function ProjectileLoadProjectile(arg1) {
+  return window['go']['main']['App']['ProjectileLoadProjectile'](arg1);
+}
+
+export function ProjectileUpdateBC(arg1, arg2) {
+  return window['go']['main']['App']['ProjectileUpdateBC'](arg1, arg2);
+}
+
+export function ProjectileUpdateProjectile(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['ProjectileUpdateProjectile'](arg1, arg2, arg3, arg4);
+}
+
 export function SelectDataDirectory() {
   return window['go']['main']['App']['SelectDataDirectory']();
+}
+
+export function SessionCreateSession(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['SessionCreateSession'](arg1, arg2, arg3, arg4);
+}
+
+export function SessionDeleteSession(arg1) {
+  return window['go']['main']['App']['SessionDeleteSession'](arg1);
+}
+
+export function SessionGetStatistics(arg1) {
+  return window['go']['main']['App']['SessionGetStatistics'](arg1);
+}
+
+export function SessionListSessions() {
+  return window['go']['main']['App']['SessionListSessions']();
+}
+
+export function SessionLoadSession(arg1) {
+  return window['go']['main']['App']['SessionLoadSession'](arg1);
+}
+
+export function SessionMarkShotInvalid(arg1, arg2) {
+  return window['go']['main']['App']['SessionMarkShotInvalid'](arg1, arg2);
+}
+
+export function SessionPollChrono(arg1) {
+  return window['go']['main']['App']['SessionPollChrono'](arg1);
+}
+
+export function SessionRecordShot(arg1, arg2) {
+  return window['go']['main']['App']['SessionRecordShot'](arg1, arg2);
+}
+
+export function SessionUpdateNote(arg1, arg2) {
+  return window['go']['main']['App']['SessionUpdateNote'](arg1, arg2);
+}
+
+export function SightCreateSight(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['main']['App']['SightCreateSight'](arg1, arg2, arg3, arg4, arg5);
+}
+
+export function SightDeleteSight(arg1) {
+  return window['go']['main']['App']['SightDeleteSight'](arg1);
+}
+
+export function SightListSights() {
+  return window['go']['main']['App']['SightListSights']();
+}
+
+export function SightLoadSight(arg1) {
+  return window['go']['main']['App']['SightLoadSight'](arg1);
+}
+
+export function SightUpdateSight(arg1, arg2, arg3, arg4, arg5, arg6) {
+  return window['go']['main']['App']['SightUpdateSight'](arg1, arg2, arg3, arg4, arg5, arg6);
+}
+
+export function UpdateChronoConfig(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['UpdateChronoConfig'](arg1, arg2, arg3, arg4);
 }

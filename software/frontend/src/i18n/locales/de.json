@@ -30,22 +30,108 @@
   },
   "profiles": {
     "title": "Waffen Profile",
-    "description": "Waffen & Optiken verwalten"
+    "description": "Waffen & Optiken verwalten",
+    "createNew": "Neues Profil",
+    "editProfile": "Profil bearbeiten",
+    "name": "Name",
+    "category": "Kategorie",
+    "barrelLength": "Lauflänge (mm)",
+    "triggerWeight": "Abzugsgewicht (g)",
+    "sightHeight": "Sehöhe (mm)",
+    "editOptics": "Optik bearbeiten",
+    "hasOptics": "Optik vorhanden",
+    "opticType": "Optik-Typ",
+    "selectOptic": "Optik auswählen",
+    "modelName": "Modellname",
+    "opticWeight": "Gewicht (g)",
+    "minMagnification": "Min. Vergrößerung",
+    "maxMagnification": "Max. Vergrößerung",
+    "twistRate": "Drallrate (mm)"
   },
   "projectiles": {
     "title": "Projektile",
-    "description": "Munition & BC-Werte"
+    "description": "Munition & BC-Werte",
+    "createNew": "Neues Projektil",
+    "name": "Name",
+    "weight": "Gewicht (g)",
+    "bc": "BC (Ballistic Coefficient)",
+    "edit": "Bearbeiten"
   },
   "sessions": {
     "title": "Sessions",
-    "description": "Messungen & Statistiken"
+    "description": "Messungen & Statistiken",
+    "create": "Neue Session",
+    "detail": "Session-Details",
+    "chronoStatus": "Chrono",
+    "chronoConfigured": "Konfiguriert",
+    "chronoNotConfigured": "Nicht konfiguriert",
+    "chronoReady": "Chrono bereit",
+    "chronoManual": "Manuelle Eingabe",
+    "recordShot": "Schuss erfassen",
+    "record": "Aufzeichnen",
+    "recordHint": "RS232-Schüsse werden automatisch aufgezeichnet, wenn aktiviert.",
+    "statistics": "Statistiken",
+    "avgVelocity": "Ø Geschwindigkeit",
+    "stdDev": "Standardabweichung",
+    "extremeSpread": "Extreme Spread",
+    "minVelocity": "Min",
+    "maxVelocity": "Max",
+    "avgEnergy": "Ø Energie",
+    "shots": "Schüsse",
+    "profile": "Profil",
+    "projectile": "Projektil",
+    "createdAt": "Erstellt",
+    "actions": "Aktionen",
+    "velocity": "Geschwindigkeit",
+    "energy": "Energie",
+    "timestamp": "Zeitstempel",
+    "valid": "Gültig",
+    "note": "Notiz",
+    "temperature": "Temperatur (°C)",
+    "filterFrom": "Von",
+    "filterTo": "Bis",
+    "noMatching": "Keine übereinstimmenden Sessions",
+    "listening": "Chrono wartet auf Signal...",
+    "startMeasurement": "Messung starten",
+    "stopMeasurement": "Stopp"
   },
   "sights": {
     "title": "Optiken",
-    "description": "Zielvorrichtungen & Optiken verwalten"
+    "description": "Zielvorrichtungen & Optiken verwalten",
+    "createNew": "Neue Optik",
+    "edit": "Optik bearbeiten",
+    "type": "Typ",
+    "modelName": "Modellname",
+    "weight": "Gewicht (g)",
+    "minMagnification": "Min. Vergrößerung",
+    "maxMagnification": "Max. Vergrößerung",
+    "magnification": "Vergrößerung"
   },
   "settings": {
     "title": "Einstellungen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "chronoTitle": "Chronograph (RS232)",
+    "chronoEnabled": "Aktiviert",
+    "chronoPort": "Port",
+    "chronoBaud": "Baudrate",
+    "chronoAutoRecord": "Auto-Aufzeichnung"
+  },
+  "common": {
+    "add": "Hinzufügen",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "create": "Erstellen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "deleteConfirm": "Wirklich löschen",
+    "deleted": "Gelöscht",
+    "created": "Erstellt",
+    "saved": "Gespeichert",
+    "error": "Fehler",
+    "noData": "Keine Daten",
+    "clear": "Löschen"
+  },
+  "validation": {
+    "required": "Erforderlich"
   }
 }

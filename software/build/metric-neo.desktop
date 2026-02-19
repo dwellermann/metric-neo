@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Metric Neo
+Comment=Ballistic Measurements & Analysis
+Comment[de]=Ballistische Messungen & Analyse
+Exec=/home/daniel/Programmierung/metric-neo-lerning/software/build/bin/metric-neo
+Icon=/home/daniel/Programmierung/metric-neo-lerning/software/build/appicon.png
+Terminal=false
+Categories=Science;Education;
+Keywords=ballistic;measurement;shooting;rifle;

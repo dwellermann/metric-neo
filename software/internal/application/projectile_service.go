@@ -90,6 +90,46 @@ func (s *ProjectileService) ListProjectiles() Result[[]ProjectileDTO] {
 	return OK(dtos)
 }
 
+// UpdateProjectile aktualisiert die Basisdaten eines Projectiles.
+func (s *ProjectileService) UpdateProjectile(
+	projectileID string,
+	name string,
+	weightGrams float64,
+	bc float64,
+) Result[ProjectileDTO] {
+	if projectileID == "" {
+		return FailWithMessage[ProjectileDTO]("ID darf nicht leer sein")
+	}
+
+	if name == "" {
+		return FailWithMessage[ProjectileDTO]("Name darf nicht leer sein")
+	}
+
+	if bc < 0 || bc > 1 {
+		return FailWithMessage[ProjectileDTO]("BC muss zwischen 0 und 1 liegen")
+	}
+
+	weight, err := valueobjects.NewMass(weightGrams)
+	if err != nil {
+		return Fail[ProjectileDTO](err)
+	}
+
+	projectile, err := s.repo.Load(projectileID)
+	if err != nil {
+		return FailWithMessage[ProjectileDTO]("Projectile nicht gefunden")
+	}
+
+	projectile.Name = name
+	projectile.Weight = weight
+	projectile.BC = bc
+
+	if err := s.repo.Save(projectile); err != nil {
+		return Fail[ProjectileDTO](err)
+	}
+
+	return OK(ProjectileToDTO(projectile))
+}
+
 // UpdateBC aktualisiert den Ballistic Coefficient eines Projectiles.
 func (s *ProjectileService) UpdateBC(id string, newBC float64) Result[ProjectileDTO] {
 	if id == "" {

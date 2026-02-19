@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -14,6 +15,14 @@ import (
 // - Default-Verzeichnisse vorschlagen
 type ConfigService struct {
 	config *Config
+}
+
+// ChronoConfigDTO kapselt Chrono-Einstellungen für UI/Bindings.
+type ChronoConfigDTO struct {
+	Enabled    bool   `json:"enabled"`
+	Port       string `json:"port"`
+	BaudRate   int    `json:"baudRate"`
+	AutoRecord bool   `json:"autoRecord"`
 }
 
 // NewConfigService erstellt neuen ConfigService
@@ -111,5 +120,33 @@ func (s *ConfigService) GetDataDir() string {
 // App muss vorher fragen ob Daten kopiert werden sollen
 func (s *ConfigService) ChangeDataDir(newDataDir string) error {
 	s.config.DataDir = newDataDir
+	return SaveConfig(s.config)
+}
+
+// GetChronoConfig gibt die aktuelle Chrono-Konfiguration zurück.
+func (s *ConfigService) GetChronoConfig() ChronoConfigDTO {
+	if s.config == nil {
+		return ChronoConfigDTO{}
+	}
+
+	return ChronoConfigDTO{
+		Enabled:    s.config.ChronoEnabled,
+		Port:       s.config.ChronoPort,
+		BaudRate:   s.config.ChronoBaudRate,
+		AutoRecord: s.config.ChronoAutoRecord,
+	}
+}
+
+// UpdateChronoConfig speichert die Chrono-Konfiguration.
+func (s *ConfigService) UpdateChronoConfig(cfg ChronoConfigDTO) error {
+	if s.config == nil {
+		return fmt.Errorf("config not initialized")
+	}
+
+	s.config.ChronoEnabled = cfg.Enabled
+	s.config.ChronoPort = cfg.Port
+	s.config.ChronoBaudRate = cfg.BaudRate
+	s.config.ChronoAutoRecord = cfg.AutoRecord
+
 	return SaveConfig(s.config)
 }

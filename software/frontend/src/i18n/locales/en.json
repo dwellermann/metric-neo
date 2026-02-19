@@ -30,22 +30,108 @@
   },
   "profiles": {
     "title": "Profiles",
-    "description": "Manage Weapons & Optics"
+    "description": "Manage Weapons & Optics",
+    "createNew": "New Profile",
+    "name": "Name",
+    "category": "Category",
+    "barrelLength": "Barrel Length (mm)",
+    "editProfile": "Edit Profile",
+    "triggerWeight": "Trigger Weight (g)",
+    "sightHeight": "Sight Height (mm)",
+    "editOptics": "Edit Optics",
+    "hasOptics": "Has Optics",
+    "opticType": "Optic Type",
+    "selectOptic": "Select Optic",
+    "modelName": "Model Name",
+    "opticWeight": "Weight (g)",
+    "minMagnification": "Min Magnification",
+    "maxMagnification": "Max Magnification",
+    "twistRate": "Twist Rate (mm)"
   },
   "projectiles": {
     "title": "Projectiles",
-    "description": "Ammunition & BC Values"
+    "description": "Ammunition & BC Values",
+    "createNew": "New Projectile",
+    "name": "Name",
+    "weight": "Weight (g)",
+    "bc": "BC (Ballistic Coefficient)",
+    "edit": "Edit"
   },
   "sessions": {
     "title": "Sessions",
-    "description": "Measurements & Statistics"
+    "description": "Measurements & Statistics",
+    "create": "New Session",
+    "detail": "Session Detail",
+    "chronoStatus": "Chrono",
+    "chronoConfigured": "Configured",
+    "chronoNotConfigured": "Not configured",
+    "chronoReady": "Chrono ready",
+    "chronoManual": "Manual input",
+    "recordShot": "Record Shot",
+    "record": "Record",
+    "recordHint": "RS232 shots will be recorded automatically when enabled.",
+    "statistics": "Statistics",
+    "avgVelocity": "Avg Velocity",
+    "stdDev": "Std. Deviation",
+    "extremeSpread": "Extreme Spread",
+    "minVelocity": "Min",
+    "maxVelocity": "Max",
+    "avgEnergy": "Avg Energy",
+    "shots": "Shots",
+    "profile": "Profile",
+    "projectile": "Projectile",
+    "createdAt": "Created",
+    "actions": "Actions",
+    "velocity": "Velocity",
+    "energy": "Energy",
+    "timestamp": "Timestamp",
+    "valid": "Valid",
+    "note": "Note",
+    "temperature": "Temperature (°C)",
+    "filterFrom": "From",
+    "filterTo": "To",
+    "noMatching": "No matching sessions",
+    "listening": "Listening for chrono...",
+    "startMeasurement": "Start Measurement",
+    "stopMeasurement": "Stop"
   },
   "sights": {
     "title": "Sights",
-    "description": "Manage Sighting Devices & Optics"
+    "description": "Manage Sighting Devices & Optics",
+    "createNew": "New Sight",
+    "edit": "Edit Sight",
+    "type": "Type",
+    "modelName": "Model Name",
+    "weight": "Weight (g)",
+    "minMagnification": "Min Magnification",
+    "maxMagnification": "Max Magnification",
+    "magnification": "Magnification"
   },
   "settings": {
     "title": "Settings",
-    "language": "Language"
+    "language": "Language",
+    "chronoTitle": "Chronograph (RS232)",
+    "chronoEnabled": "Enabled",
+    "chronoPort": "Port",
+    "chronoBaud": "Baud Rate",
+    "chronoAutoRecord": "Auto Record"
+  },
+  "common": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "close": "Close",
+    "create": "Create",
+    "save": "Save",
+    "delete": "Delete",
+    "deleteConfirm": "Really delete",
+    "deleted": "Deleted",
+    "created": "Created",
+    "saved": "Saved",
+    "error": "Error",
+    "noData": "No data",
+    "clear": "Clear"
+  },
+  "validation": {
+    "required": "Required"
   }
 }

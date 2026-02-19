@@ -2,8 +2,18 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { SelectDataDirectory, CompleteSetup } from '../../wailsjs/go/main/App';
+import {
+  NButton,
+  NCard,
+  NSpace,
+  NText,
+  NAlert,
+  NCode,
+  useMessage,
+} from 'naive-ui';
 
 const { t } = useI18n();
+const message = useMessage();
 const emit = defineEmits(['setupComplete']);
 
 const isSelecting = ref(false);
@@ -20,17 +30,20 @@ async function selectDirectory() {
     console.log('Calling SelectDataDirectory()...');
     const result = await SelectDataDirectory();
     console.log('Result received:', result);
-    
-    if (result.success) {  // lowercase!
+
+    if (result.success) {
       console.log('Directory selected:', result.data);
       selectedDirectory.value = result.data;
+      message.success(t('setup.directorySelected') || 'Directory selected');
     } else {
       console.error('Selection failed:', result.error);
       errorMessage.value = result.error || 'Fehler bei Verzeichnis-Auswahl';
+      message.error(errorMessage.value);
     }
   } catch (error) {
     console.error('Exception caught:', error);
     errorMessage.value = 'Unerwarteter Fehler: ' + error.message;
+    message.error(errorMessage.value);
   } finally {
     isSelecting.value = false;
   }
@@ -43,19 +56,21 @@ async function startApp() {
 
   try {
     const result = await CompleteSetup(selectedDirectory.value);
-    
-    if (result.success) {  // lowercase!
+
+    if (result.success) {
       console.log('Setup completed successfully!');
+      message.success(t('setup.setupComplete') || 'Setup complete!');
       emit('setupComplete', selectedDirectory.value);
     } else {
       console.error('Setup failed:', result.error);
       errorMessage.value = result.error || 'Fehler beim Setup';
-      // Zurück zur Verzeichnis-Auswahl
+      message.error(errorMessage.value);
       selectedDirectory.value = '';
     }
   } catch (error) {
     console.error('Exception during setup:', error);
     errorMessage.value = 'Unerwarteter Fehler: ' + error.message;
+    message.error(errorMessage.value);
     selectedDirectory.value = '';
   } finally {
     isCompleting.value = false;
@@ -70,81 +85,122 @@ function changeDirectory() {
 
 <template>
   <div class="setup-overlay">
-    <div class="setup-dialog">
-      <div class="setup-header">
-        <img src="../assets/logo.svg" alt="Metric Neo Logo" class="logo" />
-        <h1>🎯 {{ t('setup.welcome') }}</h1>
-        <p class="subtitle">{{ t('setup.subtitle') }}</p>
-      </div>
-
-      <div class="setup-content">
-        <!-- Schritt 1: Verzeichnis wählen -->
-        <div v-if="!selectedDirectory" class="info-box">
-          <p>
-            <strong>{{ t('setup.firstSetup') }}</strong><br>
-            {{ t('setup.selectDirectory') }}
-          </p>
-          <p class="note">
-            💡 {{ t('setup.tipCreateFolder') }} <code>MetricNeo</code>)
-          </p>
-          <p class="note">
-            {{ t('setup.dataStorage') }}
-          </p>
-        </div>
-
-        <button 
-          v-if="!selectedDirectory"
-          @click="selectDirectory" 
-          :disabled="isSelecting"
-          class="select-button"
-        >
-          {{ isSelecting ? '⏳ ' + t('setup.buttonSelectingDir') : '📁 ' + t('setup.buttonSelectDir') }}
-        </button>
-
-        <!-- Schritt 2: Bestätigung & Start -->
-        <div v-if="selectedDirectory" class="confirmation-box">
-          <div class="selected-dir">
-            <p class="label">{{ t('setup.selectedDirectory') }}</p>
-            <p class="directory-path">📂 {{ selectedDirectory }}</p>
+    <div class="setup-container">
+      <n-card size="large" class="setup-card">
+        <n-space vertical :size="24" align="center">
+          <!-- Logo & Header -->
+          <div class="header-section">
+            <img src="../assets/logo.svg" alt="Metric Neo Logo" class="logo" />
+            <h1 class="title">{{ t('setup.welcome') }}</h1>
+            <p class="subtitle">{{ t('setup.subtitle') }}</p>
           </div>
 
-          <div class="info-text">
-            <p>{{ t('setup.foldersCreated') }}</p>
-            <ul>
-              <li>📁 profiles/</li>
-              <li>📁 projectiles/</li>
-              <li>📁 sessions/</li>
-              <li>📁 sights/</li>
-            </ul>
+          <!-- Content -->
+          <div class="content-section">
+            <!-- Schritt 1: Verzeichnis wählen -->
+            <div v-if="!selectedDirectory">
+              <n-alert type="info" style="margin-bottom: 20px;">
+                <n-space vertical :size="8">
+                  <n-text strong>{{ t('setup.firstSetup') }}</n-text>
+                  <n-text>{{ t('setup.selectDirectory') }}</n-text>
+                  <n-text depth="3" style="font-size: 0.9em;">
+                    💡 {{ t('setup.tipCreateFolder') }} <n-code>MetricNeo</n-code>)
+                  </n-text>
+                  <n-text depth="3" style="font-size: 0.9em;">
+                    {{ t('setup.dataStorage') }}
+                  </n-text>
+                </n-space>
+              </n-alert>
+
+              <n-button
+                type="primary"
+                size="large"
+                block
+                @click="selectDirectory"
+                :loading="isSelecting"
+              >
+                <template #icon>
+                  <span class="mdi mdi-folder-open"></span>
+                </template>
+                {{ t('setup.buttonSelectDir') }}
+              </n-button>
+            </div>
+
+            <!-- Schritt 2: Bestätigung & Start -->
+            <div v-if="selectedDirectory">
+              <n-alert type="success" style="margin-bottom: 16px;">
+                <n-space vertical :size="8">
+                  <n-text strong>{{ t('setup.selectedDirectory') }}</n-text>
+                  <n-code style="word-break: break-all; display: block;">
+                    {{ selectedDirectory }}
+                  </n-code>
+                </n-space>
+              </n-alert>
+
+              <n-card size="small" embedded style="margin-bottom: 16px;">
+                <n-text strong style="display: block; margin-bottom: 12px;">
+                  {{ t('setup.foldersCreated') }}
+                </n-text>
+                <n-space vertical :size="4">
+                  <n-text depth="3">
+                    <span class="mdi mdi-folder" style="margin-right: 8px;"></span>
+                    profiles/
+                  </n-text>
+                  <n-text depth="3">
+                    <span class="mdi mdi-folder" style="margin-right: 8px;"></span>
+                    projectiles/
+                  </n-text>
+                  <n-text depth="3">
+                    <span class="mdi mdi-folder" style="margin-right: 8px;"></span>
+                    sessions/
+                  </n-text>
+                  <n-text depth="3">
+                    <span class="mdi mdi-folder" style="margin-right: 8px;"></span>
+                    sights/
+                  </n-text>
+                </n-space>
+              </n-card>
+
+              <n-space justify="space-between">
+                <n-button
+                  @click="changeDirectory"
+                  :disabled="isCompleting"
+                  secondary
+                >
+                  <template #icon>
+                    <span class="mdi mdi-arrow-left"></span>
+                  </template>
+                  {{ t('setup.buttonChangeDir') }}
+                </n-button>
+
+                <n-button
+                  type="success"
+                  size="large"
+                  @click="startApp"
+                  :loading="isCompleting"
+                >
+                  <template #icon>
+                    <span class="mdi mdi-rocket-launch"></span>
+                  </template>
+                  {{ t('setup.buttonStart') }}
+                </n-button>
+              </n-space>
+            </div>
+
+            <!-- Error -->
+            <n-alert v-if="errorMessage" type="error" style="margin-top: 16px;">
+              {{ errorMessage }}
+            </n-alert>
           </div>
 
-          <div class="button-group">
-            <button 
-              @click="changeDirectory" 
-              class="secondary-button"
-              :disabled="isCompleting"
-            >
-              ← {{ t('setup.buttonChangeDir') }}
-            </button>
-            
-            <button 
-              @click="startApp" 
-              :disabled="isCompleting"
-              class="start-button"
-            >
-              {{ isCompleting ? '⏳ ' + t('setup.buttonStarting') : '🚀 ' + t('setup.buttonStart') }}
-            </button>
+          <!-- Footer -->
+          <div class="footer-section">
+            <n-text depth="3" style="text-align: center; font-size: 0.85em;">
+              {{ t('setup.configLocation') }} <n-code>~/.config/metric-neo/</n-code>
+            </n-text>
           </div>
-        </div>
-
-        <div v-if="errorMessage" class="error-message">
-          ⚠️ {{ errorMessage }}
-        </div>
-      </div>
-
-      <div class="setup-footer">
-        <small>{{ t('setup.configLocation') }} <code>~/.config/metric-neo/</code></small>
-      </div>
+        </n-space>
+      </n-card>
     </div>
   </div>
 </template>
@@ -156,239 +212,63 @@ function changeDirectory() {
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 10000;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.setup-container {
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 40px 20px;
 }
 
-.setup-dialog {
-  background: white;
-  border-radius: 16px;
+.setup-card {
   max-width: 600px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
+  border-radius: 16px;
 }
 
-.setup-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 40px 30px;
+.header-section {
   text-align: center;
+  width: 100%;
+  padding-bottom: 10px;
 }
 
-.setup-header .logo {
+.logo {
   width: 80px;
   height: 80px;
-  margin-bottom: 20px;
+  display: block;
+  margin: 0 auto 20px auto;
 }
 
-.setup-header h1 {
-  margin: 0 0 10px 0;
-  font-size: 2em;
+.title {
+  margin: 0 0 8px 0;
+  font-size: 1.8em;
   font-weight: 600;
 }
 
 .subtitle {
   margin: 0;
-  opacity: 0.9;
-  font-size: 1.1em;
-}
-
-.setup-content {
-  padding: 30px;
-}
-
-.info-box {
-  background: #f8f9fa;
-  border-left: 4px solid #667eea;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 30px;
-}
-
-.info-box p {
-  margin: 0 0 15px 0;
-  line-height: 1.6;
-}
-
-.info-box p:last-child {
-  margin-bottom: 0;
-}
-
-.suggestion {
-  background: white;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 0.95em;
-}
-
-.suggestion code {
-  color: #667eea;
-  font-weight: 600;
-}
-
-.note {
-  font-size: 0.9em;
-  color: #6c757d;
-}
-
-.select-button {
-  width: 100%;
-  padding: 16px 24px;
-  font-size: 1.1em;
-  font-weight: 600;
-  color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.select-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
-}
-
-.select-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.select-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.error-message {
-  margin-top: 20px;
-  padding: 12px;
-  background: #fee;
-  color: #c33;
-  border-radius: 4px;
-  border-left: 4px solid #c33;
-}
-
-.confirmation-box {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 20px;
-  border: 2px solid #667eea;
-}
-
-.selected-dir {
-  margin-bottom: 20px;
-}
-
-.selected-dir .label {
-  margin: 0 0 8px 0;
-  font-weight: 600;
-  color: #495057;
-}
-
-.directory-path {
-  margin: 0;
-  padding: 12px;
-  background: white;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.95em;
-  color: #667eea;
-  word-break: break-all;
-}
-
-.info-text {
-  margin: 20px 0;
-  padding: 15px;
-  background: white;
-  border-radius: 4px;
-}
-
-.info-text p {
-  margin: 0 0 10px 0;
-  font-weight: 600;
-  color: #495057;
-}
-
-.info-text ul {
-  margin: 0;
-  padding-left: 20px;
-  color: #6c757d;
-}
-
-.info-text li {
-  margin: 5px 0;
-}
-
-.button-group {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.secondary-button {
-  flex: 1;
-  padding: 12px 20px;
   font-size: 1em;
-  font-weight: 600;
-  color: #495057;
-  background: white;
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
+  opacity: 0.7;
 }
 
-.secondary-button:hover:not(:disabled) {
-  border-color: #667eea;
-  color: #667eea;
+.content-section {
+  width: 100%;
 }
 
-.secondary-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.start-button {
-  flex: 2;
-  padding: 16px 24px;
-  font-size: 1.2em;
-  font-weight: 600;
-  color: white;
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.start-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(40, 167, 69, 0.4);
-}
-
-.start-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.start-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.setup-footer {
-  background: #f8f9fa;
-  padding: 15px 30px;
-  text-align: center;
-  color: #6c757d;
-}
-
-.setup-footer code {
-  background: white;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.9em;
+.footer-section {
+  width: 100%;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 </style>

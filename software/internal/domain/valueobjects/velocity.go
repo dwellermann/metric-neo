@@ -10,12 +10,22 @@ import (
 // Wie bei Mass erstellen wir einen Custom Type für Type Safety und Semantik.
 type Velocity float64
 
+const (
+	// MinVelocityMPS: 0.1 für Debugging (kann nicht immer schießen)
+	// Für echte Messungen: typisch 100-1000 m/s
+	MinVelocityMPS = 0.1
+	MaxVelocityMPS = 5000.0 // Extreme Rifles können bis ~4500 m/s erreichen
+)
+
 // NewVelocity erstellt eine neue Velocity mit Validierung.
 func NewVelocity(metersPerSecond float64) (Velocity, error) {
 	if metersPerSecond < 0 {
 		// GO-KONZEPT: fmt.Errorf für formatierte Error-Messages
 		// Ähnlich wie console.error() in JS, aber als Rückgabewert
 		return 0, fmt.Errorf("velocity cannot be negative, got: %.2f m/s", metersPerSecond)
+	}
+	if metersPerSecond < MinVelocityMPS || metersPerSecond > MaxVelocityMPS {
+		return 0, fmt.Errorf("velocity out of bounds (%.2f - %.2f m/s), got: %.2f m/s", MinVelocityMPS, MaxVelocityMPS, metersPerSecond)
 	}
 	return Velocity(metersPerSecond), nil
 }
@@ -51,12 +61,12 @@ func (v *Velocity) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &mps); err != nil {
 		return err
 	}
-	
+
 	velocity, err := NewVelocity(mps)
 	if err != nil {
 		return err
 	}
-	
+
 	*v = velocity
 	return nil
 }

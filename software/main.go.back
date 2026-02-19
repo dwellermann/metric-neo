@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"metric-neo/domain/entities"
-	"metric-neo/domain/valueobjects"
-	"metric-neo/infrastructure/persistence"
+	"metric-neo/internal/domain/entities"
+	"metric-neo/internal/domain/valueobjects"
+	"metric-neo/internal/infrastructure/persistence"
 	"os"
 	"path/filepath"
 )
