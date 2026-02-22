@@ -61,7 +61,7 @@ if [ "$DO_WEBKIT" -eq 0 ] && [ "$DO_WINDOWS" -eq 0 ]; then
 	exit 1
 fi
 
-cd "$ROOT_DIR"
+## cd "$ROOT_DIR"
 
 check_wails
 
