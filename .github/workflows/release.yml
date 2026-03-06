@@ -60,28 +60,45 @@ jobs:
 
       - name: Packaging with FPM
         run: |
-          # Version aus wails.json extrahieren (wir sind bereits in /software)
-          VERSION=$(grep '"version":' wails.json | cut -d '"' -f 4)
-          
-          # Pfade zu den Dateien innerhalb des software-Ordners
-          # FPM nimmt Pfade relativ zum aktuellen Arbeitsverzeichnis
-          FILES="build/bin/metric-neo=/usr/bin/metric-neo \
-                 build/bin/metric-neo.desktop=/usr/share/applications/metric-neo.desktop \
-                 build/appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png"
+          # 1. Version sicher aus wails.json extrahieren (jq ist zuverlässiger als grep)
+          VERSION=$(jq -r '.version // .info.version' wails.json)
+          echo "Building Version: $VERSION"
+
+          # 2. Prüfen, ob das Binary wirklich existiert (Debug-Hilfe)
+          ls -l build/bin/
+
+          # 3. Gemeinsame Dateien als Variable (ohne Backslashes, um Shell-Fehler zu vermeiden)
+          # Wichtig: Die Quelle=Ziel Paare kommen ganz am Ende des Befehls!
+          FILES="build/bin/metric-neo=/usr/bin/metric-neo build/bin/metric-neo.desktop=/usr/share/applications/metric-neo.desktop build/appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png"
 
           # DEB bauen
           if [[ "${{ matrix.formats }}" == *"deb"* ]]; then
-            fpm -s dir -t deb -n metric-neo -v $VERSION -d "libwebkit2gtk-4.0-37" -d "libgtk-3-0" $FILES
+            fpm -s dir -t deb \
+              -n metric-neo \
+              -v "$VERSION" \
+              -d "libwebkit2gtk-4.0-37" \
+              -d "libgtk-3-0" \
+              $FILES
           fi
 
           # RPM bauen
           if [[ "${{ matrix.formats }}" == *"rpm"* ]]; then
-            fpm -s dir -t rpm -n metric-neo -v $VERSION -d "webkit2gtk4.1" -d "gtk3" $FILES
+            fpm -s dir -t rpm \
+              -n metric-neo \
+              -v "$VERSION" \
+              -d "webkit2gtk4.1" \
+              -d "gtk3" \
+              $FILES
           fi
 
           # Pacman bauen
           if [[ "${{ matrix.formats }}" == *"pacman"* ]]; then
-            fpm -s dir -t pacman -n metric-neo -v $VERSION -d "webkit2gtk-4.1" -d "gtk3" $FILES
+            fpm -s dir -t pacman \
+              -n metric-neo \
+              -v "$VERSION" \
+              -d "webkit2gtk-4.1" \
+              -d "gtk3" \
+              $FILES
           fi
 
       - name: Upload Artifacts
