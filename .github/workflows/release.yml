@@ -11,14 +11,14 @@ jobs:
     name: Build ${{ matrix.target_name }}
     runs-on: ubuntu-22.04
     strategy:
-      fail-fast: false  # <--- HIER EINFÜGEN
+      fail-fast: false
       matrix:
         include:
           - target_name: "Legacy-Debian-Ubuntu"
-            webkit_tag: ""
+            is_modern: false # Wir nutzen ein einfaches Flag
             formats: "deb"
           - target_name: "Modern-Fedora-Arch"
-            webkit_tag: "-tags webkit2gtk_4.1"
+            is_modern: true  # Wir nutzen ein einfaches Flag
             formats: "rpm pacman"
 
     # Hier setzen wir das Arbeitsverzeichnis für alle Schritte auf software/
@@ -56,10 +56,17 @@ jobs:
 
       - name: Wails Build
         run: |
-          # Pfad zum Go-Bin-Verzeichnis hinzufügen
           export PATH=$PATH:$(go env GOPATH)/bin
-          # Build ausführen (erzeugt das Binary in software/build/bin/)
-          wails build ${{ matrix.webkit_tag }} -o metric-neo
+
+          # Wir nutzen das Flag aus der Matrix für eine saubere Weiche
+          if [ "${{ matrix.is_modern }}" = "true" ]; then
+            echo "STEUERE MODERNEN BUILD AN (WebKit 4.1)"
+            # Wir schreiben den Befehl hartkodiert hin - kein Risiko mehr!
+            wails build -tags webkit2gtk_4.1 -o metric-neo
+          else
+            echo "STEUERE LEGACY BUILD AN (WebKit 4.0)"
+            wails build -o metric-neo
+          fi
 
       - name: Packaging with FPM
         run: |
