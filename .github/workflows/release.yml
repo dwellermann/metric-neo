@@ -56,57 +56,54 @@ jobs:
       - name: Wails Build
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
+          # Wir räumen den bin-Ordner komplett leer
+          mkdir -p build/bin
           rm -rf build/bin/*
 
           if [ "${{ matrix.is_modern }}" = "true" ]; then
-            echo "BAUE MODERN (WebKit 4.1)"
+            echo "STARTING MODERN BUILD (WebKit 4.1)"
             wails build -clean -tags webkit2gtk_4.1 -o metric-neo-modern
           else
-            echo "BAUE LEGACY (WebKit 4.0)"
+            echo "STARTING LEGACY BUILD (WebKit 4.0)"
             wails build -clean -o metric-neo-legacy
           fi
 
-      - name: Verify Binary (Debug)
-        run: |
-          echo "Prüfe verlinkte Bibliotheken..."
-          BINARY=$(find build/bin/ -type f -executable | head -n 1)
-          echo "Prüfe Datei: $BINARY"
-          ldd $BINARY | grep webkit
-
       - name: Packaging with FPM
         run: |
-          # 1. Version auslesen
+          # 1. Version aus wails.json lesen
           VERSION=$(jq -r '.info.productVersion // .version // "1.0.0"' wails.json)
-          if [ "$VERSION" == "null" ]; then VERSION="1.0.0"; fi
-          echo "Version: $VERSION"
+          if [ "$VERSION" == "null" ] || [ -z "$VERSION" ]; then VERSION="1.0.0"; fi
+          echo "Verpacke Version: $VERSION"
 
-          # 2. Dynamische Suche nach dem Binary (da der Name je nach Matrix variiert)
+          # 2. DYNAMISCHE SUCHE: Wir finden das Binary im bin-Ordner, egal wie es heißt
           BINARY_SOURCE=$(find build/bin/ -type f -executable | head -n 1)
           echo "Gefundenes Binary: $BINARY_SOURCE"
 
-          # 3. Pfade für Icons und Desktop-Datei (direkt im software/ Ordner)
+          # 3. ANALYSE (Damit wir im Log sehen, ob es 4.0 oder 4.1 ist)
+          echo "--- LDD CHECK ---"
+          ldd $BINARY_SOURCE | grep webkit
+          echo "-----------------"
+
+          # 4. Dateien definieren (Icon und Desktop liegen direkt in /software)
           DESKTOP="metric-neo.desktop"
           ICON="appicon.png"
 
-          # Sicherheits-Check
-          if [ ! -f "$DESKTOP" ]; then echo "Desktop Datei fehlt!"; exit 1; fi
-          if [ ! -f "$ICON" ]; then echo "Icon fehlt!"; exit 1; fi
-
+          # 5. Mapping für FPM (Quelle=Ziel)
           FILES="$BINARY_SOURCE=/usr/bin/metric-neo \
                  $DESKTOP=/usr/share/applications/metric-neo.desktop \
                  $ICON=/usr/share/icons/hicolor/256x256/apps/metric-neo.png"
 
-          # 4. Pakete bauen
+          # 6. Pakete bauen
           if [[ "${{ matrix.formats }}" == *"deb"* ]]; then
-            fpm -s dir -t deb -n metric-neo -v "$VERSION" -d "libwebkit2gtk-4.0-37" -d "libgtk-3-0" --description "Metric Neo Serial Tool" $FILES
+            fpm -s dir -t deb -n metric-neo -v "$VERSION" -d "libwebkit2gtk-4.0-37" -d "libgtk-3-0" --description "Metric Neo Tool" $FILES
           fi
 
           if [[ "${{ matrix.formats }}" == *"rpm"* ]]; then
-            fpm -s dir -t rpm -n metric-neo -v "$VERSION" -d "webkit2gtk4.1" -d "gtk3" --description "Metric Neo Serial Tool" $FILES
+            fpm -s dir -t rpm -n metric-neo -v "$VERSION" -d "webkit2gtk4.1" -d "gtk3" --description "Metric Neo Tool" $FILES
           fi
 
           if [[ "${{ matrix.formats }}" == *"pacman"* ]]; then
-            fpm -s dir -t pacman -n metric-neo -v "$VERSION" -d "webkit2gtk-4.1" -d "gtk3" --description "Metric Neo Serial Tool" $FILES
+            fpm -s dir -t pacman -n metric-neo -v "$VERSION" -d "webkit2gtk-4.1" -d "gtk3" --description "Metric Neo Tool" $FILES
           fi
 
       - name: Upload Artifacts
