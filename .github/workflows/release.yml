@@ -126,19 +126,14 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: metric-neo-${{ matrix.target_name }}
+          # Wir machen den Namen absolut eindeutig pro Matrix-Lauf
+          name: metric-neo-package-${{ matrix.target_name }}-${{ github.run_id }}
           path: |
             software/*.deb
             software/*.rpm
             software/*.pkg.tar.zst
+          # Das hier verhindert, dass der Build als "Erfolg" gewertet wird,
+          # wenn gar keine Dateien erzeugt wurden (hilft beim Debuggen)
           if-no-files-found: error
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: metric-neo-${{ matrix.target_name }}
-          # Pfad relativ zum Repo-Root (daher software/*.xxx)
-          path: |
-            software/*.deb
-            software/*.rpm
-            software/*.pkg.tar.zst
+          # Optional: Wie lange die Dateien auf GitHub gespeichert werden (Standard 90 Tage)
+          retention-days: 5
