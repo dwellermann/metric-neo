@@ -57,15 +57,47 @@ jobs:
       - name: Wails Build
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
+          # 1. Radikal aufräumen, damit keine alten Binaries überleben
+          rm -rf build/bin/*
 
-          # Wir nutzen das Flag aus der Matrix für eine saubere Weiche
           if [ "${{ matrix.is_modern }}" = "true" ]; then
             echo "STEUERE MODERNEN BUILD AN (WebKit 4.1)"
-            # Wir schreiben den Befehl hartkodiert hin - kein Risiko mehr!
-            wails build -tags webkit2gtk_4.1 -o metric-neo
+            # Wir nutzen -clean, um sicherzugehen
+            wails build -clean -tags webkit2gtk_4.1 -o metric-neo-modern
           else
             echo "STEUERE LEGACY BUILD AN (WebKit 4.0)"
-            wails build -o metric-neo
+            wails build -clean -o metric-neo-legacy
+          fi
+
+      - name: Verify Binary (Debug)
+        run: |
+          echo "Prüfe verlinkte Bibliotheken..."
+          # Wir suchen das Binary und schauen in seinen 'Bauch'
+          BINARY=$(find build/bin/ -type f -executable | head -n 1)
+          echo "Prüfe Datei: $BINARY"
+          ldd $BINARY | grep webkit
+
+      - name: Packaging with FPM
+        run: |
+          VERSION=$(jq -r '.info.productVersion // .version // "1.0.0"' wails.json)
+
+          # Wir suchen das exakt gerade gebaute Binary im build-Ordner
+          BINARY_SOURCE=$(find build/bin/ -type f -executable | head -n 1)
+
+          FILES="$BINARY_SOURCE=/usr/bin/metric-neo \
+                 metric-neo.desktop=/usr/share/applications/metric-neo.desktop \
+                 appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png"
+
+          if [[ "${{ matrix.formats }}" == *"deb"* ]]; then
+            fpm -s dir -t deb -n metric-neo -v "$VERSION" -d "libwebkit2gtk-4.0-37" -d "libgtk-3-0" $FILES
+          fi
+
+          if [[ "${{ matrix.formats }}" == *"rpm"* ]]; then
+            fpm -s dir -t rpm -n metric-neo -v "$VERSION" -d "webkit2gtk4.1" -d "gtk3" $FILES
+          fi
+
+          if [[ "${{ matrix.formats }}" == *"pacman"* ]]; then
+            fpm -s dir -t pacman -n metric-neo -v "$VERSION" -d "webkit2gtk-4.1" -d "gtk3" $FILES
           fi
 
       - name: Packaging with FPM
