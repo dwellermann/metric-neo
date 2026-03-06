@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Metric Neo
+Exec=metric-neo
+Icon=metric-neo
+Type=Application
+Categories=Utility;
+Terminal=false
