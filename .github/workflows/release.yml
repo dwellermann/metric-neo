@@ -165,7 +165,7 @@ jobs:
       - name: Wails Build
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
-          wails build -clean -tags webkit2gtk_4.1
+          wails build -clean -tags webkit2_41
 
       - name: Verify WebKit linkage
         run: ldd build/bin/metric-neo | grep -i webkit
@@ -237,7 +237,7 @@ jobs:
       - name: Wails Build
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
-          wails build -clean -tags webkit2gtk_4.1
+          wails build -clean -tags webkit2_41
 
       - name: Verify WebKit linkage
         run: ldd build/bin/metric-neo | grep -i webkit
