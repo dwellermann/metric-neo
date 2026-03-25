@@ -1,0 +1,299 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+
+  # ──────────────────────────────────────────────────────────────
+  # Windows  →  metric-neo.exe
+  # ──────────────────────────────────────────────────────────────
+  build-windows:
+    name: Build — Windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: software
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: software/go.sum
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: software/frontend/package-lock.json
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Wails Build
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          wails build -clean
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metric-neo-windows
+          path: software/build/bin/metric-neo.exe
+          if-no-files-found: error
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────
+  # Ubuntu / Debian  →  .deb  (WebKit 4.0 / ubuntu-22.04)
+  # ──────────────────────────────────────────────────────────────
+  build-ubuntu:
+    name: Build — Ubuntu / Debian
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: software
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: software/go.sum
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: software/frontend/package-lock.json
+
+      - name: Install Build Dependencies (WebKit 4.0)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev libwebkit2gtk-4.0-dev \
+            build-essential gcc make file binutils jq ruby-dev
+
+      - name: Install FPM
+        run: sudo gem install fpm
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Wails Build
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          wails build -clean
+
+      - name: Verify WebKit linkage
+        run: ldd build/bin/metric-neo | grep -i webkit
+
+      - name: Package .deb
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$GITHUB_REF_NAME" ]; then
+            VERSION=$(jq -r '.info.productVersion // "0.0.0-dev"' wails.json)
+          fi
+          echo "Version: $VERSION"
+          fpm -s dir -t deb \
+            -n metric-neo -v "$VERSION" \
+            --description "Metric Neo — Ballistic tracking tool" \
+            --url "https://github.com/${{ github.repository }}" \
+            --maintainer "Daniel Wellermann <hello@wellermann.de>" \
+            -d "libwebkit2gtk-4.0-37" -d "libgtk-3-0" \
+            build/bin/metric-neo=/usr/bin/metric-neo \
+            metric-neo.desktop=/usr/share/applications/metric-neo.desktop \
+            appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metric-neo-deb
+          path: software/*.deb
+          if-no-files-found: error
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────
+  # Fedora  →  .rpm  (WebKit 4.1 / ubuntu-24.04)
+  # ──────────────────────────────────────────────────────────────
+  build-fedora:
+    name: Build — Fedora
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: software
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: software/go.sum
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: software/frontend/package-lock.json
+
+      - name: Install Build Dependencies (WebKit 4.1)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev libwebkit2gtk-4.1-dev \
+            build-essential gcc make file binutils jq ruby-dev rpm
+
+      - name: Install FPM
+        run: sudo gem install fpm
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Wails Build
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          wails build -clean -tags webkit2gtk_4.1
+
+      - name: Verify WebKit linkage
+        run: ldd build/bin/metric-neo | grep -i webkit
+
+      - name: Package .rpm
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$GITHUB_REF_NAME" ]; then
+            VERSION=$(jq -r '.info.productVersion // "0.0.0-dev"' wails.json)
+          fi
+          echo "Version: $VERSION"
+          fpm -s dir -t rpm \
+            -n metric-neo -v "$VERSION" \
+            --description "Metric Neo — Ballistic tracking tool" \
+            --url "https://github.com/${{ github.repository }}" \
+            --maintainer "Daniel Wellermann <hello@wellermann.de>" \
+            -d "webkit2gtk4.1" -d "gtk3" \
+            build/bin/metric-neo=/usr/bin/metric-neo \
+            metric-neo.desktop=/usr/share/applications/metric-neo.desktop \
+            appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metric-neo-rpm
+          path: software/*.rpm
+          if-no-files-found: error
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────
+  # Arch Linux  →  .pkg.tar.zst  (WebKit 4.1 / ubuntu-24.04)
+  # ──────────────────────────────────────────────────────────────
+  build-arch:
+    name: Build — Arch Linux
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: software
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: software/go.sum
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: software/frontend/package-lock.json
+
+      - name: Install Build Dependencies (WebKit 4.1)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev libwebkit2gtk-4.1-dev \
+            build-essential gcc make file binutils jq ruby-dev libarchive-tools
+
+      - name: Install FPM
+        run: sudo gem install fpm
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Wails Build
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          wails build -clean -tags webkit2gtk_4.1
+
+      - name: Verify WebKit linkage
+        run: ldd build/bin/metric-neo | grep -i webkit
+
+      - name: Package .pkg.tar.zst
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$GITHUB_REF_NAME" ]; then
+            VERSION=$(jq -r '.info.productVersion // "0.0.0-dev"' wails.json)
+          fi
+          echo "Version: $VERSION"
+          fpm -s dir -t pacman \
+            -n metric-neo -v "$VERSION" \
+            --description "Metric Neo — Ballistic tracking tool" \
+            --url "https://github.com/${{ github.repository }}" \
+            --maintainer "Daniel Wellermann <hello@wellermann.de>" \
+            -d "webkit2gtk-4.1" -d "gtk3" \
+            build/bin/metric-neo=/usr/bin/metric-neo \
+            metric-neo.desktop=/usr/share/applications/metric-neo.desktop \
+            appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metric-neo-arch
+          path: software/*.pkg.tar.zst
+          if-no-files-found: error
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────
+  # GitHub Release  (nur bei Tags)
+  # ──────────────────────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    needs: [build-windows, build-ubuntu, build-fedora, build-arch]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - name: Download all Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/
+          merge-multiple: true
+
+      - name: List release files
+        run: find dist/ -type f | sort
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            dist/**/*.exe
+            dist/**/*.deb
+            dist/**/*.rpm
+            dist/**/*.pkg.tar.zst
