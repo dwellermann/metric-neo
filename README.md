@@ -1,106 +1,80 @@
 
 <div align="center">
-  <!-- Logo (Stelle sicher, dass die Datei unter assets/logos/logo.svg liegt) -->
   <img src="assets/logos/logo.svg" width="160" height="160" alt="Metric Neo Logo">
 
   <h1>Metric Neo</h1>
 
-  <p>
-    <strong>Modular Measurement and Maintenance Platform for Shooting Sports.</strong>
-  </p>
-  <!-- Status & Language -->
-  <p>
-    <img src="https://img.shields.io/badge/Status-Development-blue?style=flat&logo=gitbook&logoColor=white" alt="Status">
-    <img src="https://img.shields.io/badge/ADRs-German_🇩🇪-purple?style=flat" alt="Docs Language">
-  </p>
+  <p><strong>Offline-first chronograph data platform for shooting sports.</strong></p>
 
-  <!-- Badges Row 1: Tech Stack & Platform -->
-
-<p>
-  <img src="https://img.shields.io/badge/Backend-Go-blue?style=flat&logo=go&logoColor=white" alt="Backend Go">
-  <img src="https://img.shields.io/badge/Framework-Wails-CF2F36?style=flat&logo=wails&logoColor=white" alt="Framework Wails">
-  <img src="https://img.shields.io/badge/Frontend-Vue.js-green?style=flat&logo=vue.js&logoColor=white" alt="Frontend Vue">
-  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-lightblue?style=flat&logo=linux" alt="Platform">
-  <img src="https://img.shields.io/badge/License-MIT-orange?style=flat" alt="License">
-</p>
+  <p>
+    <img src="https://img.shields.io/badge/Status-Alpha-orange?style=flat&logo=gitbook&logoColor=white" alt="Status">
+    <img src="https://img.shields.io/badge/Backend-Go-blue?style=flat&logo=go&logoColor=white" alt="Go">
+    <img src="https://img.shields.io/badge/Framework-Wails-CF2F36?style=flat&logo=wails&logoColor=white" alt="Wails">
+    <img src="https://img.shields.io/badge/Frontend-Vue.js-green?style=flat&logo=vue.js&logoColor=white" alt="Vue">
+    <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Ubuntu%2024%2B%20%7C%20Fedora%20%7C%20Arch-lightblue?style=flat&logo=linux" alt="Platform">
+    <img src="https://img.shields.io/badge/License-MIT-orange?style=flat" alt="License">
+  </p>
 </div>
-
 
 ---
 
-> 🚧 **Project Status: Development Phase**
-> The implementation phase (coding) has started, and the first Alpha release is in testing. Next steps is CI/CD pipeline setup and web presence (documentation & landing page). The major problem is WebKit in Fedora and Ubuntu and the different versions of WebKitGTK. The CI/CD pipeline is currently focused on Linux, but Windows CI/CD is planned.
->
-> 🇩🇪 **Note:** While the source code and UI are in English to adhere to international standards, the architectural decision records (ADRs) and domain specifications in the `/docs` folder are currently maintained in **German**. This reflects the primary requirements of the initial stakeholder group (DACH region).
+> 🇩🇪 **Note:** Source code and UI are in English. ADRs and domain specifications in `/docs` are maintained in German for the primary stakeholder group (DACH region).
 
-## 🎯 Mission
-Metric Neo is a high-assurance, offline-first desktop application designed to capture, analyze, and archive **chronograph data** from RS232 chronographs (specifically LMBR).
+## 💡 Why Metric Neo?
 
-It solves the scalability issue faced by ambitious sport shooters and equipment managers: **Managing the lifecycle and performance data of multiple devices in a unified, secure system.**
+No usable software existed for the LMBR RS232 chronograph on Linux. What started as a small utility to capture serial data quickly escalated into a full platform — once you start tracking one rifle's performance, you want to track all of them. Metric Neo is the result of that escalation.
 
 ## ⚡ Key Features
-*   **Offline First / Air-Gap Ready:** No internet connection required. Zero telemetry.
-*   **Hardware Integration:** Auto-discovery of LMBR Chronographs via RS232/USB.
-*   **Inventory Management:** Track usage, maintenance intervals, and configurations for unlimited rifles/bows.
-*   **Analytics:** Overlay visual comparisons of shot strings to detect performance degradation.
-*   **Cross-Platform:** Single codebase for **Windows** and **Linux**.
 
-## 🏗 Architecture
-The project follows a **Modular Monolith** approach using **Hexagonal Architecture** principles to separate the domain logic (kinetic analysis & statistics) from the infrastructure (serial ports, file storage).
+- **Offline First / Air-Gap Ready** — No internet required. Zero telemetry.
+- **Hardware Integration** — Auto-discovery of LMBR Chronographs via RS232/USB.
+- **Inventory Management** — Track rifles, bows, projectiles, and maintenance intervals.
+- **Analytics** — Visual comparison of shot strings to detect performance degradation.
+- **Cross-Platform** — Windows 10/11 and Linux (Ubuntu 24.04+, Fedora, Arch).
 
-*   **Backend:** Go (Wails) for type-safe, high-performance serial communication.
-*   **Frontend:** Vue.js + Naive-Ui for a modern, dark-mode compatible UI.
-*   **Data Storage:** Local JSON files (human-readable) with an abstraction layer for future encryption.
+## 📦 Download
 
-**[Explore the Architecture Documentation (German) →](./docs/adr)**
+Get the latest release from the [GitHub Releases page](../../releases/latest).
 
-## 📅 Roadmap & Progress
+| Platform | File |
+|---|---|
+| Windows 10/11 | `metric-neo_VERSION_windows_amd64.exe` |
+| Ubuntu 24.04+ / Debian | `metric-neo_VERSION_ubuntu24_amd64.deb` |
+| Fedora | `metric-neo_VERSION_fedora_amd64.rpm` |
+| Arch Linux | `metric-neo_VERSION_arch_amd64.pkg.tar.zst` |
 
-- [x] **Phase 1: Conception**
-    - [x] Requirements Analysis (High Assurance / Offline)
-    - [x] Technology Selection (Go/Wails/Vue)
-    - [x] Domain Modeling
-- [x] **Phase 2: Architecture**
-    - [x] System Context & Container Diagrams
-    - [x] Architecture Decision Records (ADRs) defined
-    - [x] Security Strategy (Air-Gap / Linux First)
-- [x] **Phase 3: Backend Foundation**
-    - [x] Domain Layer (Framework-Agnostic)
-        - [x] Core Entities & Value Objects (Shot, Session, Projectile)
-        - [x] Ballistic Calculations (Velocity/Energy)
-        - [x] Unit Tests for Domain Logic
-    - [x] Persistence Layer
-        - [x] JSON Repository Implementation
-        - [x] Snapshot Pattern (Deep Copy for Audit Trail)
-    - [x] Framework Integration
-        - [x] Initialize Wails Project Structure
-        - [x] Application Service Layer (Domain ↔ UI Bridge)
-- [x] **Phase 4: UI & Hardware Integration**
-    - [x] Frontend Foundation (Vue.js + Naive-UI)
-        - [x] Session Management UI
-        - [x] Shot Data Visualization
-    - [x] Hardware Integration
-        - [x] RS232 Serial Driver (LMBR Protocol)
-        - [x] Auto-Discovery & Error Handling
-    - [x] First Alpha Release
-- [-] **Phase 5: CI/CD & Automation**
-    - [ ] Configure GitHub Actions (Cross-Compile Wails for Win/Linux)
-    - [ ] Setup Quality Gates (Go Vet?, biome.js ? Testing?)
-    - [ ] Automate Release Pipelines (Draft Releases & Artifact Upload)
-- [ ] **Phase 6: Web Presence & Ecosystem**
-    - [ ] Setup VitePress for Documentation & Landing Page
-    - [ ] Configure GitHub Actions for Automatic SFTP Deployment
-    - [ ] Implement Automated Download Page
-
-> **Note on Implementation Strategy:** The backend is developed in a layered approach (Domain → Persistence → Framework) to ensure maximum testability, portability, and adherence to hexagonal architecture principles. This allows the core logic to remain framework-agnostic and simplifies future platform extensions.
 ## 🚀 Getting Started
 
-### comming soon...
+**Linux (Ubuntu 24.04+)**
+```bash
+sudo apt install ./metric-neo_*_ubuntu24_amd64.deb
+metric-neo
+```
 
+**Linux (Fedora)**
+```bash
+sudo dnf install metric-neo_*_fedora_amd64.rpm
+metric-neo
+```
+
+**Linux (Arch)**
+```bash
+sudo pacman -U metric-neo_*_arch_amd64.pkg.tar.zst
+metric-neo
+```
+
+**Windows** — Download the `.exe` and run directly. No installer required.
 
 ## 🛡️ Security & Privacy
 
-**Metric Neo** is built with a "Linux First" mindset regarding auditability. It relies on explicit user control and avoids any runtime dependencies on external CDNs or cloud services.
-📄 License
+Built with a "Linux First" mindset. No cloud services, no CDN dependencies, no telemetry. Data is stored locally as human-readable JSON files under full user control.
 
-Distributed under the MIT License. See LICENSE for more information.
+## 📚 Documentation
+
+- [Architecture Decision Records (German)](./docs/adr)
+- [Roadmap](./docs/ROADMAP.md)
+- [User Manual](./docs/user-manual.md)
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for details.

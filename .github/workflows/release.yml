@@ -46,20 +46,26 @@ jobs:
           export PATH=$PATH:$(go env GOPATH)/bin
           wails build -clean
 
+      - name: Rename Binary
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$GITHUB_REF_NAME" ]; then VERSION="0.0.0-dev"; fi
+          mv build/bin/metric-neo.exe build/bin/metric-neo_${VERSION}_windows_amd64.exe
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: metric-neo-windows
-          path: software/build/bin/metric-neo.exe
+          path: software/build/bin/metric-neo_*_windows_amd64.exe
           if-no-files-found: error
           retention-days: 1
 
   # ──────────────────────────────────────────────────────────────
-  # Ubuntu / Debian  →  .deb  (WebKit 4.0 / ubuntu-22.04)
+  # Ubuntu 24.04+  →  .deb  (WebKit 4.1 / ubuntu-24.04)
   # ──────────────────────────────────────────────────────────────
   build-ubuntu:
-    name: Build — Ubuntu / Debian
-    runs-on: ubuntu-22.04
+    name: Build — Ubuntu 24.04+
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: software
@@ -80,11 +86,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: software/frontend/package-lock.json
 
-      - name: Install Build Dependencies (WebKit 4.0)
+      - name: Install Build Dependencies (WebKit 4.1)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libgtk-3-dev libwebkit2gtk-4.0-dev \
+            libgtk-3-dev libwebkit2gtk-4.1-dev \
             build-essential gcc make file binutils jq ruby-dev
 
       - name: Install FPM
@@ -96,7 +102,7 @@ jobs:
       - name: Wails Build
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
-          wails build -clean
+          wails build -clean -tags webkit2_41
 
       - name: Verify WebKit linkage
         run: ldd build/bin/metric-neo | grep -i webkit
@@ -110,10 +116,11 @@ jobs:
           echo "Version: $VERSION"
           fpm -s dir -t deb \
             -n metric-neo -v "$VERSION" \
+            --package "metric-neo_${VERSION}_ubuntu24_amd64.deb" \
             --description "Metric Neo — Ballistic tracking tool" \
             --url "https://github.com/${{ github.repository }}" \
             --maintainer "Daniel Wellermann <hello@wellermann.de>" \
-            -d "libwebkit2gtk-4.0-37" -d "libgtk-3-0" \
+            -d "libwebkit2gtk-4.1-0" -d "libgtk-3-0" \
             build/bin/metric-neo=/usr/bin/metric-neo \
             metric-neo.desktop=/usr/share/applications/metric-neo.desktop \
             appicon.png=/usr/share/icons/hicolor/256x256/apps/metric-neo.png
@@ -182,6 +189,7 @@ jobs:
           echo "Version: $VERSION"
           fpm -s dir -t rpm \
             -n metric-neo -v "$VERSION" \
+            --package "metric-neo_${VERSION}_fedora_amd64.rpm" \
             --description "Metric Neo — Ballistic tracking tool" \
             --url "https://github.com/${{ github.repository }}" \
             --maintainer "Daniel Wellermann <hello@wellermann.de>" \
@@ -254,6 +262,7 @@ jobs:
           echo "Version: $VERSION"
           fpm -s dir -t pacman \
             -n metric-neo -v "$VERSION" \
+            --package "metric-neo_${VERSION}_arch_amd64.pkg.tar.zst" \
             --description "Metric Neo — Ballistic tracking tool" \
             --url "https://github.com/${{ github.repository }}" \
             --maintainer "Daniel Wellermann <hello@wellermann.de>" \
