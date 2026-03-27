@@ -1,48 +1,26 @@
 ---
-name: "🐛 Bug Report"
-about: "Report a bug or unexpected behaviour"
+name: "🐛 Bug melden (Deutsch)"
+about: "Etwas funktioniert nicht wie erwartet"
 title: "[BUG] "
-labels: ["bug", "triage"]
+labels: ["bug"]
 assignees: ""
 ---
 
-## Description
-<!-- A clear and concise description of the bug. -->
+## Was ist passiert?
+<!-- Beschreibe kurz, was nicht funktioniert. -->
 
-## Steps to Reproduce
-1. Go to '...'
-2. Click on '...'
-3. Scroll to '...'
-4. Error occurs
+## Wie kann man es nachvollziehen?
+<!-- Welche Schritte führen zum Problem? -->
+1.
+2.
+3.
 
-## Expected Behaviour
-<!-- What should have happened instead? -->
+## Was hast du erwartet?
+<!-- Was hätte eigentlich passieren sollen? -->
 
-## Actual Behaviour
-<!-- What actually happened? -->
+## System
+- **Betriebssystem:** <!-- z. B. Fedora 43, Ubuntu 24.04, Windows 11 -->
+- **Metric Neo Version:** <!-- z. B. v0.1.0-alpha -->
 
-## Screenshots / Logs
-<!-- If applicable, add screenshots or log output. -->
-<details>
-<summary>Log Output</summary>
-
-```
-Paste log here
-```
-
-</details>
-
-## Environment
-| Property           | Value         |
-|--------------------|---------------|
-| Operating System   | <!-- e.g. Fedora 41, Windows 11 --> |
-| OS Version         | <!-- e.g. 41 / 24H2 --> |
-| Metric Neo Version | <!-- e.g. v0.1.0-alpha --> |
-| Chronograph Model  | <!-- e.g. LMBR, n/a --> |
-| Interface          | <!-- e.g. RS232 / USB adapter --> |
-
-## Hardware (if applicable)
-<!-- Which chronograph model? Which USB-RS232 adapter? Which COM/TTY port? -->
-
-## Additional Context
-<!-- Any other information that might be helpful. -->
+## Screenshot oder Fehlermeldung (optional)
+<!-- Falls vorhanden, kannst du hier ein Bild oder eine Fehlermeldung einfügen. -->
