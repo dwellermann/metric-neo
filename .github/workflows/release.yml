@@ -259,9 +259,11 @@ jobs:
           if [ -z "$VERSION" ] || [ "$VERSION" = "$GITHUB_REF_NAME" ]; then
             VERSION=$(jq -r '.info.productVersion // "0.0.0-dev"' wails.json)
           fi
-          echo "Version: $VERSION"
+          # Pacman erlaubt keine Bindestriche in der Versionsnummer (z. B. 0.1.0-alpha → 0.1.0alpha)
+          PACMAN_VERSION="${VERSION//-/}"
+          echo "Version: $VERSION → Pacman: $PACMAN_VERSION"
           fpm -s dir -t pacman \
-            -n metric-neo -v "$VERSION" \
+            -n metric-neo -v "$PACMAN_VERSION" \
             --package "metric-neo_${VERSION}_arch_amd64.pkg.tar.zst" \
             --description "Metric Neo — Ballistic tracking tool" \
             --url "https://github.com/${{ github.repository }}" \
