@@ -22,8 +22,16 @@ import "@/styles/global.css";
 
 import { siteConfig } from "@/config/site";
 
-const currentLocale = Astro.currentLocale ?? "en";
+const currentLocale = Astro.currentLocale ?? "de";
 const htmlLang = currentLocale === "de" ? "de" : "en";
+
+// hreflang URLs for SEO
+const currentPath = Astro.url.pathname;
+const isEN = currentLocale === "en";
+const dePath = isEN ? (currentPath.replace(/^\/en(\/|$)/, "/") || "/") : currentPath;
+const enPath = isEN ? currentPath : "/en" + (currentPath === "/" ? "" : currentPath);
+const hreflangDe = siteConfig.url + dePath;
+const hreflangEn = siteConfig.url + enPath;
 
 const { title, description, ogImage, canonical, metadata } = Astro.props;
 
@@ -47,6 +55,9 @@ const finalIgnoreTitleTemplate = metadata?.ignoreTitleTemplate || false;
     <ClientRouter />
     <Schema type="WebSite" data={{}} />
     <slot name="head" />
+    <link rel="alternate" hreflang="de" href={hreflangDe} />
+    <link rel="alternate" hreflang="en" href={hreflangEn} />
+    <link rel="alternate" hreflang="x-default" href={hreflangDe} />
     <script is:inline>
       const getTheme = () => {
         if (

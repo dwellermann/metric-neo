@@ -4,22 +4,22 @@ import ThemeToggle from "@/components/ui/ThemeToggle.astro";
 import { Image } from "astro:assets";
 import logoSrc from "@/assets/logo.svg";
 
-const currentLocale = Astro.currentLocale ?? "en";
-const isDE = currentLocale === "de";
-const navLinks = isDE ? siteConfig.navLinksDE : siteConfig.navLinks;
+const currentLocale = Astro.currentLocale ?? "de";
+const isEN = currentLocale === "en";
+const navLinks = isEN ? siteConfig.navLinksEN : siteConfig.navLinks;
 
 // Language switcher: map current path to opposite locale
 const currentPath = Astro.url.pathname;
 let altHref: string;
-if (isDE) {
-  // Strip /de prefix
-  altHref = currentPath.replace(/^\/de(\/|$)/, "/") || "/";
+if (isEN) {
+  // Strip /en prefix → go to DE (default)
+  altHref = currentPath.replace(/^\/en(\/|$)/, "/") || "/";
 } else {
-  // Add /de prefix
-  altHref = "/de" + (currentPath === "/" ? "" : currentPath);
+  // Add /en prefix → go to EN
+  altHref = "/en" + (currentPath === "/" ? "" : currentPath);
 }
-const altLabel = isDE ? "EN" : "DE";
-const altTitle = isDE ? "Switch to English" : "Zur deutschen Version wechseln";
+const altLabel = isEN ? "DE" : "EN";
+const altTitle = isEN ? "Zur deutschen Version wechseln" : "Switch to English";
 ---
 
 <nav
@@ -30,7 +30,7 @@ const altTitle = isDE ? "Switch to English" : "Zur deutschen Version wechseln";
   >
     <!-- Logo + Name -->
     <div class="flex items-center gap-3">
-      <a href={isDE ? "/de" : "/"} class="flex items-center gap-2 group" aria-label="Metric Neo Home">
+      <a href={isEN ? "/en" : "/"} class="flex items-center gap-2 group" aria-label="Metric Neo Home">
         <Image src={logoSrc} alt="Metric Neo Logo" width={32} height={32} class="w-8 h-8 flex-shrink-0" />
         <span class="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
           {siteConfig.name}

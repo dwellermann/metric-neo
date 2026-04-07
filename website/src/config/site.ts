@@ -5,8 +5,8 @@ export const siteConfig = {
   description:
     "Offline-first chronograph data platform for shooting sports. Manage profiles, projectiles, and sessions — fully air-gap ready.",
   url: "https://metric-neo.wellermann.de",
-  lang: "en",
-  locale: "en_US",
+  lang: "de",
+  locale: "de_DE",
   author: "Daniel Wellermann",
   ogImage: ogImage,
   socialLinks: {
@@ -15,15 +15,15 @@ export const siteConfig = {
     releases: "https://github.com/dwellermann/metric-neo/releases/latest",
   },
   navLinks: [
-    { text: "Home", href: "/" },
-    { text: "Manual", href: "/manual" },
-    { text: "Changelog", href: "/changelog" },
-    { text: "About", href: "/about" },
+    { text: "Start", href: "/" },
+    { text: "Handbuch", href: "/manual" },
+    { text: "Änderungen", href: "/changelog" },
+    { text: "Über", href: "/about" },
   ],
-  navLinksDE: [
-    { text: "Start", href: "/de" },
-    { text: "Handbuch", href: "/de/manual" },
-    { text: "Änderungen", href: "/de/changelog" },
-    { text: "Über", href: "/de/about" },
+  navLinksEN: [
+    { text: "Home", href: "/en" },
+    { text: "Manual", href: "/en/manual" },
+    { text: "Changelog", href: "/en/changelog" },
+    { text: "About", href: "/en/about" },
   ],
 };

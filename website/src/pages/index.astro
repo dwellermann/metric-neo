@@ -7,9 +7,9 @@ import WidgetWrapper from "@/components/widgets/WidgetWrapper.astro";
 import { Icon } from "astro-icon/components";
 
 const metadata = {
-  title: "Metric Neo — Offline-First Chronograph Platform",
+  title: "Metric Neo — Offline-First Chronograph-Plattform",
   description:
-    "Record, manage, and analyze ballistic measurement sessions fully offline. Integrates with LMBR RS232 chronographs. Free & open-source.",
+    "Ballistische Messdaten erfassen, verwalten und analysieren — vollständig offline. Integriert LMBR RS232-Chronographen. Kostenlos und Open Source.",
   ignoreTitleTemplate: true,
 };
 
@@ -18,21 +18,21 @@ const downloads = [
     os: "Windows 10/11",
     icon: "tabler:brand-windows",
     file: "metric-neo_*_windows_amd64.exe",
-    note: "Portable — no installer required",
+    note: "Portabel — kein Installer nötig",
     iconClass: "text-blue-400",
   },
   {
     os: "Ubuntu 24.04+",
     icon: "tabler:brand-ubuntu",
-    file: ".deb package",
+    file: ".deb Paket",
     note: "WebKit2GTK 4.1",
     iconClass: "text-orange-400",
   },
   {
     os: "Fedora",
     icon: "lucide:layers",
-    file: ".rpm package",
-    note: "Tested on Fedora 43",
+    file: ".rpm Paket",
+    note: "Getestet auf Fedora 43",
     iconClass: "text-blue-500",
   },
   {
@@ -47,9 +47,9 @@ const downloads = [
 
 <BaseLayout {metadata}>
   <Hero
-    title={`Offline-First<br class="hidden md:block" /> <span class="bg-linear-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">Chronograph Platform</span>`}
+    title={`Offline-First<br class="hidden md:block" /> <span class="bg-linear-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">Chronograph-Plattform</span>`}
     tagline="v0.1.1 · Alpha · Open Source · MIT"
-    description="Record, manage, and analyze ballistic measurement sessions — fully offline. Built for precision shooters and sports archers in the DACH region."
+    description="Ballistische Messdaten erfassen, verwalten und analysieren — vollständig offline. Für Präzisionsschützen und Bogensportler im DACH-Raum."
     actions={[
       {
         text: "Download",
@@ -58,78 +58,78 @@ const downloads = [
         icon: "lucide:download",
       },
       {
-        text: "View on GitHub",
+        text: "Auf GitHub ansehen",
         href: siteConfig.socialLinks.github,
         variant: "secondary",
         icon: "lucide:github",
-        ariaLabel: "View Metric Neo on GitHub",
+        ariaLabel: "Metric Neo auf GitHub ansehen",
       },
     ]}
   />
 
   <Features
-    tagline="Why Metric Neo"
-    title="Built for the Range"
-    subtitle="Everything you need to track performance data — no cloud, no subscriptions, no internet."
+    tagline="Warum Metric Neo"
+    title="Gebaut für den Schießstand"
+    subtitle="Alles, was du zur Erfassung von Leistungsdaten brauchst — ohne Cloud, ohne Abonnement, ohne Internet."
     features={[
       {
-        title: "Offline / Air-Gap Ready",
+        title: "Offline / Air-Gap-tauglich",
         description:
-          "Works without internet in bunkers, basements, and restricted areas. Zero telemetry, zero cloud dependency.",
+          "Funktioniert ohne Internet in Bunkern, Kellern und gesperrten Bereichen. Keine Telemetrie, keine Cloud-Abhängigkeit.",
         icon: "lucide:wifi-off",
         iconClass: "bg-emerald-500/10 text-emerald-400",
       },
       {
-        title: "LMBR Chronograph Integration",
+        title: "LMBR Chronograph-Integration",
         description:
-          "Auto-discovers LMBR chronographs via RS232/USB. Shots are recorded automatically — no manual entry needed.",
+          "Automatische Erkennung von LMBR-Chronographen via RS232/USB. Schüsse werden automatisch aufgezeichnet.",
         icon: "tabler:cpu",
         iconClass: "bg-blue-500/10 text-blue-400",
       },
       {
-        title: "Inventory Management",
+        title: "Inventarverwaltung",
         description:
-          "Track rifles, air guns, bows, optics, and ammunition batches. Link profiles and projectiles to sessions.",
+          "Verwalte Gewehre, Luftgewehre, Bögen, Optiken und Munitionschargen. Profile und Projektile mit Sitzungen verknüpfen.",
         icon: "lucide:package",
         iconClass: "bg-purple-500/10 text-purple-400",
       },
       {
-        title: "Shot Statistics & Analytics",
+        title: "Schuss-Statistik & Analyse",
         description:
-          "Real-time calculation of average velocity, standard deviation, extreme spread, and kinetic energy (Joule).",
+          "Echtzeit-Berechnung von Durchschnittsgeschwindigkeit, Standardabweichung, Extremstreuung und kinetischer Energie (Joule).",
         icon: "lucide:chart-line",
         iconClass: "bg-pink-500/10 text-pink-400",
       },
       {
-        title: "Cross-Platform",
+        title: "Plattformübergreifend",
         description:
-          "Native builds for Windows 10/11, Ubuntu 24.04+, Fedora, and Arch Linux from a single Go/Wails codebase.",
+          "Native Builds für Windows 10/11, Ubuntu 24.04+, Fedora und Arch Linux aus einer einzigen Go/Wails-Codebasis.",
         icon: "tabler:device-laptop",
         iconClass: "bg-indigo-500/10 text-indigo-400",
       },
       {
-        title: "Privacy First",
+        title: "Datenschutz hat Vorrang",
         description:
-          "Your data stays on your machine as human-readable JSON files. No accounts, no analytics, no phone-home.",
+          "Deine Daten bleiben auf deinem Gerät als lesbare JSON-Dateien. Kein Account, keine Telemetrie, kein Cloud-Zwang.",
         icon: "lucide:shield-check",
         iconClass: "bg-teal-500/10 text-teal-400",
       },
     ]}
   />
 
-  <!-- Download Section -->
+  <!-- Download-Bereich -->
   <WidgetWrapper containerClass="max-w-5xl mx-auto" id="download">
     <div class="text-center mb-12">
       <div
         class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-4"
       >
-        Latest Release
+        Neueste Version
       </div>
       <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-        Download Metric Neo
+        Metric Neo herunterladen
       </h2>
       <p class="text-muted-foreground text-lg max-w-xl mx-auto">
-        Free, open-source, and portable. No installer required on Windows.
+        Kostenlos, Open Source und portabel. Kein Installer unter Windows nötig.
       </p>
     </div>
 
@@ -150,7 +150,7 @@ const downloads = [
             </div>
             <div class="mt-auto flex items-center gap-1 text-xs text-primary font-medium group-hover:gap-2 transition-all">
               <Icon name="lucide:download" class="w-3.5 h-3.5" />
-              Download
+              Herunterladen
             </div>
           </a>
         ))
@@ -158,12 +158,12 @@ const downloads = [
     </div>
 
     <p class="text-center text-sm text-muted-foreground">
-      All releases on <a
+      Alle Versionen auf <a
         href={siteConfig.socialLinks.github + "/releases"}
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary hover:underline">GitHub Releases</a
-      > · MIT License · Source code included
+      > · MIT-Lizenz · Quellcode inklusive
     </p>
   </WidgetWrapper>
 </BaseLayout>
