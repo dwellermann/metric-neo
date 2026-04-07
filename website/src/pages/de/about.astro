@@ -1,0 +1,123 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+import { Icon } from "astro-icon/components";
+
+const metadata = {
+  title: "Über Metric Neo",
+  description:
+    "Metric Neo ist eine quelloffene Offline-First Chronograph-Plattform für den Schießsport. Hintergrund, Designentscheidungen und Technologie-Stack.",
+};
+
+const techStack = [
+  { name: "Go 1.21", desc: "Backend-Logik & RS232-Kommunikation", icon: "tabler:brand-golang", iconClass: "text-cyan-400" },
+  { name: "Wails", desc: "Native Desktop-App-Framework (Go + Web)", icon: "tabler:device-desktop", iconClass: "text-blue-400" },
+  { name: "Vue.js + Naive UI", desc: "Frontend-UI mit umfangreichen Komponenten", icon: "tabler:brand-vue", iconClass: "text-emerald-400" },
+  { name: "JSON / Dateisystem", desc: "Offline-First, menschenlesbare Datenspeicherung", icon: "lucide:file-json", iconClass: "text-yellow-400" },
+];
+
+const adrs = [
+  { title: "Offline-First", desc: "Keine harten Abhängigkeiten von Cloud oder Lizenzservern. Funktioniert auch in Air-Gap-Umgebungen." },
+  { title: "Unveränderliche Session-Snapshots", desc: "Profil- und Projektildaten werden bei der Session-Erstellung tiefenkopiert. Frühere Messungen ändern sich dadurch nie rückwirkend." },
+  { title: "Nur SI-Einheiten", desc: "Geschwindigkeit in m/s, Energie in Joule — systemweit erzwungen, um regionale Einheitenverwirrung zu vermeiden." },
+  { title: "Linux als vollwertiges Ziel", desc: "Linux-Builds sind keine Nachgedanken. Ubuntu, Fedora und Arch sind gleichwertige Primärziele." },
+];
+---
+
+<BaseLayout {metadata}>
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-16 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-4">
+        Über das Projekt
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        Was ist <span class="bg-linear-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">Metric Neo</span>?
+      </h1>
+      <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+        Eine quelloffene, vollständig offline-fähige Plattform zur Erfassung und Auswertung von Chronographen-Messungen im Schießsport.
+      </p>
+    </div>
+
+    <!-- Background -->
+    <div class="mb-16 rounded-2xl border border-border bg-card p-8">
+      <h2 class="text-2xl font-bold mb-4">Hintergrund</h2>
+      <div class="space-y-4 text-muted-foreground leading-relaxed">
+        <p>
+          Metric Neo entstand aus einer schlichten Frustration: Kein verfügbares Tool kombinierte ballistische Chronographen-Datenerfassung mit einer ordentlichen Inventarverwaltung in einem vollständig offline-fähigen, quelloffenen Paket — insbesondere nicht eines, das sowohl auf Windows als auch auf Linux erstklassig läuft.
+        </p>
+        <p>
+          Das Projekt richtet sich an die Schießsport-Community im DACH-Raum (Deutschland, Österreich, Schweiz), in der Luftgewehr, Luftpistole, Bogensport und Kleinkaliber-Schießen weit verbreitet und gut organisiert sind. Sportler legen großen Wert auf Reproduzierbarkeit — sie möchten genau wissen, welche Munitionscharge, Waffenkonfiguration und Optik bei jeder Sitzung verwendet wurde.
+        </p>
+        <p>
+          Metric Neo löst das durch die Kombination einer Hardware-Integrationsschicht (LMBR RS232-Chronographen), eines strukturierten Inventarsystems und eines unveränderlichen Session-Snapshot-Modells — alles in einer portablen Anwendung ohne jede Server-Abhängigkeit.
+        </p>
+      </div>
+    </div>
+
+    <!-- Architecture Decisions -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold mb-6">Wesentliche Designentscheidungen</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {
+          adrs.map((adr) => (
+            <div class="rounded-2xl border border-border bg-card p-6">
+              <div class="flex items-center gap-2 mb-2">
+                <Icon name="lucide:check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <span class="font-semibold text-foreground">{adr.title}</span>
+              </div>
+              <p class="text-sm text-muted-foreground">{adr.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold mb-6">Technologie-Stack</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {
+          techStack.map((t) => (
+            <div class="flex items-start gap-4 rounded-2xl border border-border bg-card p-5">
+              <Icon name={t.icon} class={`w-7 h-7 flex-shrink-0 ${t.iconClass}`} />
+              <div>
+                <div class="font-semibold text-foreground">{t.name}</div>
+                <div class="text-sm text-muted-foreground mt-0.5">{t.desc}</div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Author + Links -->
+    <div class="rounded-2xl border border-border bg-card p-8 text-center">
+      <h2 class="text-2xl font-bold mb-2">Autor</h2>
+      <p class="text-muted-foreground mb-6">
+        Metric Neo wird von <strong class="text-foreground">{siteConfig.author}</strong> entwickelt und gepflegt.
+        Beiträge, Fehlerberichte und Feedback sind auf GitHub willkommen.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href={siteConfig.socialLinks.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-xl bg-foreground/10 px-6 py-3 text-sm font-semibold text-foreground transition-all hover:bg-foreground/20"
+        >
+          <Icon name="lucide:github" class="w-4 h-4" />
+          GitHub Repository
+        </a>
+        <a
+          href={siteConfig.socialLinks.githubProfile}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-sm font-semibold text-muted-foreground transition-all hover:border-primary/50 hover:text-primary"
+        >
+          <Icon name="lucide:user" class="w-4 h-4" />
+          {siteConfig.author} auf GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
