@@ -63,3 +63,5 @@ pNotes/
 *.key
 *.pem
 .env
+
+dist/

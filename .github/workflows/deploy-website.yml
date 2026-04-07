@@ -1,0 +1,50 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "website/**"
+      - "CHANGELOG.md"
+      - "docs/user-manual.md"
+      - "docs/user-manual-de.md"
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build Astro & Deploy via SFTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        working-directory: website
+        run: npm ci
+
+      - name: Build Astro site
+        working-directory: website
+        run: npm run build
+        env:
+          CI: true
+
+      - name: Deploy via SFTP
+        uses: wlixie/lftp-action@v1
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          localdir: website/dist/
+          remotedir: ${{ secrets.SFTP_REMOTE_PATH }}
+          options: "--parallel=4 --delete"

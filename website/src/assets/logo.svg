@@ -1,0 +1,24 @@
+    
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle (Dark Grey/Blue) -->
+  <circle cx="256" cy="256" r="240" fill="#1e293b" />
+  
+  <!-- Outer Ring (Tech Blue) -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#3b82f6" stroke-width="20" stroke-opacity="0.8"/>
+  
+  <!-- Crosshair Ticks -->
+  <line x1="256" y1="40" x2="256" y2="80" stroke="#3b82f6" stroke-width="15" stroke-linecap="round"/>
+  <line x1="256" y1="472" x2="256" y2="432" stroke="#3b82f6" stroke-width="15" stroke-linecap="round"/>
+  <line x1="40" y1="256" x2="80" y2="256" stroke="#3b82f6" stroke-width="15" stroke-linecap="round"/>
+  <line x1="472" y1="256" x2="432" y2="256" stroke="#3b82f6" stroke-width="15" stroke-linecap="round"/>
+
+  <!-- The "Metric" Pulse (Green - representing data/success) -->
+  <path d="M 100 256 L 180 256 L 220 160 L 290 350 L 330 256 L 412 256" 
+        fill="none" 
+        stroke="#10b981" 
+        stroke-width="25" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>
+
+  

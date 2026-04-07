@@ -1,0 +1,57 @@
+---
+import { siteConfig } from "@/config/site";
+
+const currentLocale = Astro.currentLocale ?? "en";
+const isDE = currentLocale === "de";
+---
+
+<footer class="mt-20 border-t border-border bg-card">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center justify-between gap-8 md:flex-row">
+      <div class="flex flex-col items-center gap-2 md:items-start">
+        <span class="text-lg font-bold text-foreground">{siteConfig.name}</span>
+        <p class="text-sm text-muted-foreground max-w-sm">
+          {
+            isDE
+              ? "Offline-First Chronograph-Plattform fuer Schuetzen und Bogensportler. Kostenlos und Open Source."
+              : "Offline-first chronograph data platform for shooting sports enthusiasts. Free and open-source."
+          }
+        </p>
+      </div>
+      <div class="flex items-center gap-6">
+        <a
+          href={siteConfig.socialLinks.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground transition-colors hover:text-primary"
+          >GitHub Repo</a
+        >
+        <a
+          href={siteConfig.socialLinks.githubProfile}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground transition-colors hover:text-primary"
+          >{siteConfig.author}</a
+        >
+        <a
+          href={siteConfig.socialLinks.releases}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground transition-colors hover:text-primary"
+          >{isDE ? "Releases" : "Releases"}</a
+        >
+      </div>
+    </div>
+    <div
+      class="mt-8 border-t border-border pt-8 text-center text-xs text-muted-foreground"
+    >
+      &copy; {new Date().getFullYear()}
+      {siteConfig.author} &middot; MIT License &middot; Built with <a
+        href="https://astro.build"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-primary transition-colors">Astro</a
+      >
+    </div>
+  </div>
+</footer>

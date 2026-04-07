@@ -1,0 +1,169 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+import Hero from "@/components/widgets/Hero.astro";
+import Features from "@/components/widgets/Features.astro";
+import WidgetWrapper from "@/components/widgets/WidgetWrapper.astro";
+import { Icon } from "astro-icon/components";
+
+const metadata = {
+  title: "Metric Neo — Offline-First Chronograph-Plattform",
+  description:
+    "Ballistische Messprogramme erfassen, verwalten und analysieren — vollstaendig offline. Integriert LMBR RS232-Chronographen. Kostenlos und Open Source.",
+  ignoreTitleTemplate: true,
+};
+
+const downloads = [
+  {
+    os: "Windows 10/11",
+    icon: "tabler:brand-windows",
+    file: "metric-neo_*_windows_amd64.exe",
+    note: "Portabel — kein Installer erforderlich",
+    iconClass: "text-blue-400",
+  },
+  {
+    os: "Ubuntu 24.04+",
+    icon: "tabler:brand-ubuntu",
+    file: ".deb Paket",
+    note: "WebKit2GTK 4.1",
+    iconClass: "text-orange-400",
+  },
+  {
+    os: "Fedora",
+    icon: "lucide:layers",
+    file: ".rpm Paket",
+    note: "Getestet auf Fedora 43",
+    iconClass: "text-blue-500",
+  },
+  {
+    os: "Arch Linux",
+    icon: "lucide:terminal",
+    file: ".pkg.tar.zst",
+    note: "via pacman",
+    iconClass: "text-cyan-400",
+  },
+];
+---
+
+<BaseLayout {metadata}>
+  <Hero
+    title={`Offline-First<br class="hidden md:block" /> <span class="bg-linear-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">Chronograph-Plattform</span>`}
+    tagline="v0.1.1 · Alpha · Open Source · MIT"
+    description="Ballistische Messprogramme erfassen, verwalten und analysieren — vollstaendig offline. Fuer Praezisionsschuetzen und Bogensportler im DACH-Raum."
+    actions={[
+      {
+        text: "Download",
+        href: siteConfig.socialLinks.releases,
+        variant: "primary",
+        icon: "lucide:download",
+      },
+      {
+        text: "Auf GitHub ansehen",
+        href: siteConfig.socialLinks.github,
+        variant: "secondary",
+        icon: "lucide:github",
+        ariaLabel: "Metric Neo auf GitHub ansehen",
+      },
+    ]}
+  />
+
+  <Features
+    tagline="Warum Metric Neo"
+    title="Gebaut fuer den Schiessstand"
+    subtitle="Alles, was du zur Erfassung von Leistungsdaten brauchst — ohne Cloud, ohne Abonnement, ohne Internet."
+    features={[
+      {
+        title: "Offline / Air-Gap-tauglich",
+        description:
+          "Funktioniert ohne Internet in Bunkern, Kellern und gesperrten Bereichen. Kein Telemetrie, keine Cloud-Abhaengigkeit.",
+        icon: "lucide:wifi-off",
+        iconClass: "bg-emerald-500/10 text-emerald-400",
+      },
+      {
+        title: "LMBR Chronograph-Integration",
+        description:
+          "Automatische Erkennung von LMBR-Chronographen via RS232/USB. Schuesse werden automatisch aufgezeichnet.",
+        icon: "tabler:cpu",
+        iconClass: "bg-blue-500/10 text-blue-400",
+      },
+      {
+        title: "Inventarverwaltung",
+        description:
+          "Verwalte Gewehre, Luftgewehre, Boegen, Optiken und Munitionschargen. Profile und Projektile mit Sitzungen verknuepfen.",
+        icon: "lucide:package",
+        iconClass: "bg-purple-500/10 text-purple-400",
+      },
+      {
+        title: "Schuss-Statistik & Analyse",
+        description:
+          "Echtzeit-Berechnung von Durchschnittsgeschwindigkeit, Standardabweichung, Extremstreuung und kinetischer Energie (Joule).",
+        icon: "lucide:chart-line",
+        iconClass: "bg-pink-500/10 text-pink-400",
+      },
+      {
+        title: "Plattformubergreifend",
+        description:
+          "Native Builds fuer Windows 10/11, Ubuntu 24.04+, Fedora und Arch Linux aus einer einzigen Go/Wails-Codebasis.",
+        icon: "tabler:device-laptop",
+        iconClass: "bg-indigo-500/10 text-indigo-400",
+      },
+      {
+        title: "Datenschutz zuerst",
+        description:
+          "Deine Daten bleiben auf deinem Geraet als lesbare JSON-Dateien. Kein Account, keine Analyse, kein Telefon-nach-Hause.",
+        icon: "lucide:shield-check",
+        iconClass: "bg-teal-500/10 text-teal-400",
+      },
+    ]}
+  />
+
+  <!-- Download-Bereich -->
+  <WidgetWrapper containerClass="max-w-5xl mx-auto" id="download">
+    <div class="text-center mb-12">
+      <div
+        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-4"
+      >
+        Neueste Version
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+        Metric Neo herunterladen
+      </h2>
+      <p class="text-muted-foreground text-lg max-w-xl mx-auto">
+        Kostenlos, Open Source und portabel. Kein Installer unter Windows erforderlich.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {
+        downloads.map((d) => (
+          <a
+            href={siteConfig.socialLinks.releases}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col gap-3 rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/40 hover:bg-card/80 hover:shadow-lg hover:shadow-primary/5"
+          >
+            <Icon name={d.icon} class={`w-8 h-8 ${d.iconClass}`} />
+            <div>
+              <div class="font-semibold text-foreground">{d.os}</div>
+              <div class="text-xs text-muted-foreground mt-0.5">{d.file}</div>
+              <div class="text-xs text-muted-foreground/70 mt-1">{d.note}</div>
+            </div>
+            <div class="mt-auto flex items-center gap-1 text-xs text-primary font-medium group-hover:gap-2 transition-all">
+              <Icon name="lucide:download" class="w-3.5 h-3.5" />
+              Herunterladen
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <p class="text-center text-sm text-muted-foreground">
+      Alle Versionen auf <a
+        href={siteConfig.socialLinks.github + "/releases"}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-primary hover:underline">GitHub Releases</a
+      > · MIT-Lizenz · Quellcode inklusive
+    </p>
+  </WidgetWrapper>
+</BaseLayout>
