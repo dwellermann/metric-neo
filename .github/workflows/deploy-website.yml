@@ -39,12 +39,13 @@ jobs:
         env:
           CI: true
 
-      - name: Deploy via SFTP
-        uses: wlixie/lftp-action@v1
+      - name: Deploy to webspace via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          host: ${{ secrets.SFTP_HOST }}
+          server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          localdir: website/dist/
-          remotedir: ${{ secrets.SFTP_REMOTE_PATH }}
-          options: "--parallel=4 --delete"
+          port: ${{ secrets.SFTP_PORT }}
+          local_path: './website/dist/*'
+          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
+          sftp_only: true

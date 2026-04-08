@@ -64,4 +64,10 @@ pNotes/
 *.pem
 .env
 
-dist/
+# --- Astro (website/) ---
+website/dist/
+website/.astro/
+website/node_modules/
+website/.env
+website/.env.*
+!website/.env.example
